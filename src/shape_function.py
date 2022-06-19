@@ -70,13 +70,13 @@ def shape_function(point,numnode_elem):
     elif numnode_elem == 8:
         ########### eight node quadrilateral element ########## 
         #
-        #    7----6-----5
-        #    |          | 
-        #    |          |
-        #    8          4 
-        #    |          |
-        #    |          |
-        #    1----2-----3
+        #    7-----6-----5
+        #    |           | 
+        #    |           |
+        #    8           4 
+        #    |           |
+        #    |           |
+        #    1-----2-----3
         # Shape functions
         eta = point[1]
         psi = point[0]
