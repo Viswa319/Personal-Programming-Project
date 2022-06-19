@@ -14,7 +14,7 @@ with open('mesh_1.inp', "r") as f:
         numnode = int(lines[0].split()[0]) # number of nodes
         numelem = int(lines[0].split()[1]) # number of elements
         numfixnodes = int(lines[0].split()[2]) # number of fixed nodes
-        stressState = int(lines[0].split()[3]) # if stressState == 1 plane stress; if ntype = 2 plane strain
+        stressState = int(lines[0].split()[3]) # if stressState == 1 plane stress; if stressState = 2 plane strain
         numnode_elem = int(lines[0].split()[4]) # number of nodes per element
         numdof = int(lines[0].split()[5]) # degrees of freedom
         numdim = int(lines[0].split()[6]) # dimension of a problem
