@@ -87,5 +87,5 @@ def shape_function(point,numnode_elem):
         dNdeta = np.array([0.25*(1-psi)*(psi+2*eta), -0.5*(1-psi)*(1+psi), 0.25*(1+psi)*(-psi+2*eta), -eta*(1+psi), 0.25*(1+psi)*(psi+2*eta),0.5*(1-psi)*(1+psi),0.25*(1+psi)*(-psi+2*eta),-eta*(1-psi)])[np.newaxis]
         dNdxi = np.r_[dNdpsi,dNdeta]
     else:
-        raise ValueError("Specified type is not possible. Possible types are 2,3,4 and 8")
+        raise ValueError("Number of nodes per element provided is not possible. Possible nodes per element are 2,3,4 and 8")
     return N,dNdxi
