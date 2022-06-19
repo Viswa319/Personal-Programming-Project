@@ -8,6 +8,7 @@ import numpy as np
 import numpy.polynomial.legendre as ptwt
 from geometry import quadrature_coefficients
 from material_routine import material_routine 
+from shape_function import shape_function
 with open('mesh_1.inp', "r") as f:
         lines = f.readlines()
 
@@ -66,3 +67,4 @@ elif stressState == 2:
 # Initialization of force and global stiffness tensor
 ak = np.zeros((numdof*numnode, numdof*numnode))
 force = np.zeros(numdof*numnode)
+N,dNdXi = shape_function([0,-1],8)

@@ -42,8 +42,8 @@ def shape_function(point,numnode_elem):
         #         3
         #
         # Shape functions
-        eta = point[0]
-        psi = point[1]
+        eta = point[1]
+        psi = point[0]
         N = np.array([1-psi-eta,psi,eta])[np.newaxis] 
         
         # derivatives of shape functions w.r.t psi and eta respectively
@@ -59,8 +59,8 @@ def shape_function(point,numnode_elem):
         #    |         |
         #    1---------2
         # Shape functions
-        eta = point[0]
-        psi = point[1]
+        eta = point[1]
+        psi = point[0]
         N = 0.25*np.array([(1-psi)*(1-eta), (1+psi)*(1-eta), (1+psi)*(1+eta), (1-psi)*(1+eta)])[np.newaxis]
     
         # derivatives of shape functions w.r.t psi and eta respectively
@@ -78,12 +78,12 @@ def shape_function(point,numnode_elem):
         #    |          |
         #    1----2-----3
         # Shape functions
-        eta = point[0]
-        psi = point[1]
-        N = np.array([-0.25*(1-psi)*(1-eta)*(1+psi+eta), 0.5*(1-psi)*(1-eta)*(1+eta), -0.25*(1+psi)*(1-eta)*(1-psi+eta), 0.5*(1-psi)*(1-eta)*(1+eta), -0.25*(1+psi)*(1+eta)*(1-psi-eta), 0.5*(1+psi)*(1+eta)*(1-psi),-0.25*(1-psi)*(1+eta)*(1+psi-eta), 0.5*(1-psi)*(1+eta)*(1-eta)])[np.newaxis]
+        eta = point[1]
+        psi = point[0]
+        N = np.array([-1*0.25*(1-psi)*(1-eta)*(1+psi+eta), 0.5*(1-psi)*(1-eta)*(1+psi), -1*0.25*(1+psi)*(1-eta)*(1-psi+eta), 0.5*(1+psi)*(1-eta)*(1+eta), -1*0.25*(1+psi)*(1+eta)*(1-psi-eta), 0.5*(1+psi)*(1+eta)*(1-psi),-1*0.25*(1-psi)*(1+eta)*(1+psi-eta), 0.5*(1-psi)*(1+eta)*(1-eta)])[np.newaxis]
         
         # derivatives of shape functions w.r.t psi and eta respectively
-        dNdpsi = np.array([0.25*(1-eta)*(2*psi+eta), -psi*(1-eta), 0.25*(1-eta)*(2*psi-eta), 0.5(1-eta)*(1+eta), 0.25*(1+eta)*(2*psi+eta),-psi*(1+eta),0.25*(1+eta)*(2*psi-eta),-0.5(1-eta)*(1+eta)])[np.newaxis]
+        dNdpsi = np.array([0.25*(1-eta)*(2*psi+eta), -psi*(1-eta), 0.25*(1-eta)*(2*psi-eta), 0.5*(1-eta)*(1+eta), 0.25*(1+eta)*(2*psi+eta),-psi*(1+eta),0.25*(1+eta)*(2*psi-eta),-0.5*(1-eta)*(1+eta)])[np.newaxis]
         dNdeta = np.array([0.25*(1-psi)*(psi+2*eta), -0.5*(1-psi)*(1+psi), 0.25*(1+psi)*(-psi+2*eta), -eta*(1+psi), 0.25*(1+psi)*(psi+2*eta),0.5*(1-psi)*(1+psi),0.25*(1+psi)*(-psi+2*eta),-eta*(1-psi)])[np.newaxis]
         dNdxi = np.r_[dNdpsi,dNdeta]
     else:
