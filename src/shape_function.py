@@ -5,23 +5,28 @@
 #                               65130
 # *************************************************************************
 import numpy as np
-def shape_function(point,numnode_elem):
-    """
-    Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates.
+class shape_function:
+    def __init__(self):
+        pass
+    def two_node_line_element(self,point):
+        """
+        Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates 
+        for a two node line element.
+        
 
-    Parameters
-    ----------
-    point : array of float64
+        Parameters
+        ----------
+        point : array of float64
         point.
-    
-    Returns
-    -------
-    N : array of float64
-        Lagrange interpolant shape function.
-    dNdxi : array of float64
-        gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
-    """
-    if numnode_elem == 2:
+
+        Returns
+        -------
+        N : array of float64
+            Lagrange interpolant shape function.
+        dNdxi : array of float64
+            gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
+
+        """
         ########### two node line element ########## 
         #  
         #    1---------2
@@ -31,7 +36,27 @@ def shape_function(point,numnode_elem):
         
         # derivatives of shape functions w.r.t psi
         dNdxi = np.array([1/2,-1/2])[np.newaxis]
-    elif numnode_elem == 3:
+        return N,dNdxi
+    
+    def three_node_triangular_element(self,point):
+        """
+        Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates 
+        for a three node triangular element.
+
+        Parameters
+        ----------
+        point : array of float64
+            point.
+
+        Returns
+        -------
+        N : array of float64
+            Lagrange interpolant shape function.
+        dNdxi : array of float64
+            gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
+
+        """
+
         ########### three node triangular element ########## 
         #  
         #    1---------2
@@ -50,7 +75,25 @@ def shape_function(point,numnode_elem):
         dNdpsi = np.array([-1, 1, 0])[np.newaxis]
         dNdeta = np.array([-1, 0, 1])[np.newaxis]
         dNdxi = np.r_[dNdpsi,dNdeta]
-    elif numnode_elem == 4:
+        return N,dNdxi
+    def four_node_quadrilateral_element(self,point):
+        """
+        Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates 
+        for a four node quadrilateral element.
+
+        Parameters
+        ----------
+        point : array of float64
+            point.
+
+        Returns
+        -------
+        N : array of float64
+            Lagrange interpolant shape function.
+        dNdxi : array of float64
+            gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
+
+        """
         ########### four node quadrilateral element ########## 
         #  
         #    4---------3
@@ -67,7 +110,25 @@ def shape_function(point,numnode_elem):
         dNdpsi = 0.25*np.array([-(1-eta), (1-eta), (1+eta), -(1+eta)])[np.newaxis]
         dNdeta = 0.25*np.array([-(1-psi), -(1+psi), (1+psi), (1-psi)])[np.newaxis]
         dNdxi = np.r_[dNdpsi,dNdeta]
-    elif numnode_elem == 8:
+        return N,dNdxi
+    def eight_node_quadrilateral_element(self,point):
+        """
+        Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates 
+        for an eight node quadrilateral element.
+
+        Parameters
+        ----------
+        point : array of float64
+            point.
+
+        Returns
+        -------
+        N : array of float64
+            Lagrange interpolant shape function.
+        dNdxi : array of float64
+            gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
+
+        """
         ########### eight node quadrilateral element ########## 
         #
         #    7-----6-----5
@@ -84,8 +145,6 @@ def shape_function(point,numnode_elem):
         
         # derivatives of shape functions w.r.t psi and eta respectively
         dNdpsi = np.array([0.25*(1-eta)*(2*psi+eta), -psi*(1-eta), 0.25*(1-eta)*(2*psi-eta), 0.5*(1-eta)*(1+eta), 0.25*(1+eta)*(2*psi+eta),-psi*(1+eta),0.25*(1+eta)*(2*psi-eta),-0.5*(1-eta)*(1+eta)])[np.newaxis]
-        dNdeta = np.array([0.25*(1-psi)*(psi+2*eta), -0.5*(1-psi)*(1+psi), 0.25*(1+psi)*(-psi+2*eta), -eta*(1+psi), 0.25*(1+psi)*(psi+2*eta),0.5*(1-psi)*(1+psi),0.25*(1+psi)*(-psi+2*eta),-eta*(1-psi)])[np.newaxis]
+        dNdeta = np.array([0.25*(1-psi)*(psi+2*eta), -0.5*(1-psi)*(1+psi), 0.25*(1+psi)*(-psi+2*eta), -eta*(1+psi), 0.25*(1+psi)*(psi+2*eta),0.5*(1-psi)*(1+psi),0.25*(1-psi)*(-psi+2*eta),-eta*(1-psi)])[np.newaxis]
         dNdxi = np.r_[dNdpsi,dNdeta]
-    else:
-        raise ValueError("Number of nodes per element provided is not possible. Possible nodes per element are 2,3,4 and 8")
-    return N,dNdxi
+        return N,dNdxi
