@@ -9,6 +9,8 @@ import numpy.polynomial.legendre as ptwt
 from geometry import quadrature_coefficients
 from material_routine import material_routine 
 from element_stiffness import element_stiffness
+from index import assembly_index
+from global_stiffness import global_stiffness
 with open('mesh_1.inp', "r") as f:
         lines = f.readlines()
 
@@ -64,21 +66,13 @@ if stressState == 1:
 elif stressState == 2:
     C = mat.planestrain(Young,Poisson)
 
-# Initialization of force and global stiffness matrices
+# Initialization of global force vector and global stiffness matrix
 global_K = np.zeros((num_dof*num_node, num_dof*num_node))
 force = np.zeros(num_dof*num_node)
 
 for elem in range(0,num_elem):
     elem_K  = element_stiffness(elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gauss,Points,Weights,C)
     
-    # for inode in range(0,num_node_elem):
-    #     elem_node_1 = elements[elem,inode]
-    #     for idof in range(0,num_dof):
-    #         itotv = (elem_node_1-1)*num_dof+idof
-    #         ievab = (inode-1)*num_dof+idof
-    #         for jnode in range(0,num_node_elem):
-    #             elem_node_2 = elements[elem,jnode]
-    #             for jdof in range(0,num_dof):
-    #                 jtotv = (elem_node_2-1)*num_dof+jdof
-    #                 jevab = (jnode-1)*num_dof+jdof
-    #                 global_K[itotv,jtotv] = global_K[itotv,jtotv]+elem_K[ievab,jevab]
+    index = assembly_index(elements,elem,num_dof,num_node_elem)
+    
+    global_K = global_stiffness(index,elem_K,global_K)

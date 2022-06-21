@@ -45,6 +45,7 @@ def element_stiffness(elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gaus
         element stiffness matrix.
 
     """
+    # total number of element variables
     num_elem_var = num_node_elem*num_dof
     # Initialization of element stiffness matrices
     elem_K = np.zeros((num_elem_var,num_elem_var))
