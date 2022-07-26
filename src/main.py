@@ -5,74 +5,141 @@
 #                               65130
 # *************************************************************************
 import numpy as np
+from scipy import linalg
 import numpy.polynomial.legendre as ptwt
 from geometry import quadrature_coefficients
 from material_routine import material_routine 
 from element_stiffness import element_stiffness
-from index import assembly_index
-from global_stiffness import global_stiffness
-with open('mesh_1.inp', "r") as f:
-        lines = f.readlines()
+from assembly_index import assembly
+from boundary_condition import boundary_condition
+from solve_stress_strain import solve_stress_strain
+from global_stiffness import global_stiffness_assembly
+from shape_function import shape_function
+from Bmatrix import Bmatrix
+from input_parameters import *
+import time
+from scipy.sparse import csc_matrix
+from scipy.sparse.linalg import spsolve
+start_time = time.time()
+# total number of variables in the solution
+num_tot_var = num_node*num_dof
 
-        num_node = int(lines[0].split()[0]) # number of nodes
-        num_elem = int(lines[0].split()[1]) # number of elements
-        num_fixnodes = int(lines[0].split()[2]) # number of fixed nodes
-        stressState = int(lines[0].split()[3]) # if stressState == 1 plane stress; if stressState = 2 plane strain
-        num_node_elem = int(lines[0].split()[4]) # number of nodes per element
-        num_dof = int(lines[0].split()[5]) # degrees of freedom
-        num_dim = int(lines[0].split()[6]) # dimension of a problem
-        num_Gauss = int(lines[0].split()[7]) # number of integration points
-        num_stress = int(lines[0].split()[8]) # number of stress comonents
-        num_mat = int(lines[0].split()[9]) # number of materials 
-        num_props = int(lines[0].split()[10]) # number of material properties
-        
-        elements = np.zeros((num_elem,num_node_elem),int)
-        mat_type = np.zeros(num_elem)
-        for i in range(1,num_elem+1):
-            elements[i-1,0:num_node_elem] = (lines[i].split())[1:num_node_elem+1]
-            mat_type[i-1] = (lines[i].split())[num_node_elem+1]
-        nodes = np.zeros((num_node,num_dim),float)
-        for i in range(1+num_elem,1+num_elem+num_node):
-            nodes[i-1-num_elem,0] = float((lines[i].split())[1])
-            nodes[i-1-num_elem,1] = float((lines[i].split())[2])
-        
-        fixnodes = np.zeros(num_fixnodes,int)
-        fixdof = np.zeros((num_fixnodes,num_dof),int)
-        disp_bc = np.zeros((num_fixnodes,num_dof),float)
-        for i in range(1+num_elem+num_node,1+num_elem+num_node+num_fixnodes):
-            fixnodes[i-1-num_elem-num_node] = (lines[i].split())[0]
-            fixdof[i-1-num_elem-num_node,0:num_dof] = (lines[i].split())[1:num_dof+1]
-            disp_bc[i-1-num_elem-num_node,0:num_dof] = (lines[i].split())[3:num_dof+3]
-        
-        props = np.zeros(num_props,float)
-        props[0:num_props] = (lines[1+num_elem+num_node+num_fixnodes].split())[1:num_props+1]
-        
-        ipload = int((lines[1+num_elem+num_node+num_fixnodes+1].split())[0])
-        nedge = int((lines[1+num_elem+num_node+num_fixnodes+1].split())[1])
+# the number of DOFs for displacements per node
+num_dof_u = num_dof-1
 
+# the number of DOFs for order parameters per node
+num_dof_phi = num_dof-2
+
+# total number of variables for displacements
+num_tot_var_u = num_node*num_dof_u
+
+# total number of element variables 
+num_elem_var = num_node_elem*num_dof
+
+# total number of displacements per element 
+num_elem_var_u = num_node_elem*num_dof_u
+
+# total number of order parameters per element 
+num_elem_var_phi = num_node_elem*num_dof_phi
+
+# total number of Gauss points used for integration in n-dimension
+num_Gauss_2D = num_Gauss**num_dim
+
+# Initialize stress component values at the integration points of all elements
+stress = np.zeros((num_elem,num_Gauss_2D,num_stress))
+
+# Initialize strain component values at the integration points of all elements 
+strain = np.zeros((num_elem,num_Gauss_2D,num_stress))
+
+# Initialize displacment values
+disp = np.zeros(num_tot_var)
+
+# Getting the nodes near crack
+crack = []
+for i in range(0,num_node):
+    if 0 <= nodes[i,0] <= 3.5 and nodes[i,1] == 9.9:
+        crack.append(i)
+    if 0 <= nodes[i,0] <= 3.5 and nodes[i,1] == 10:
+        crack.append(i)
+
+# assigning order parameter values as 0.99 (approximately 1)
+for i in range(0,len(crack)):
+    disp[num_tot_var_u+crack[i]] = 0.99
+    
 
 # Call Guass quadrature points and weights using inbuilt function
 PtsWts = ptwt.leggauss(num_Gauss)
-points = PtsWts[0]
-weights = PtsWts[1]
+# points = PtsWts[0]
+# weights = PtsWts[1]
 Points,Weights = quadrature_coefficients(num_Gauss)
 
 # Call Stiffness tensor from material routine
 mat = material_routine()
-Young = props[0]
-Poisson = props[1]
 if stressState == 1:    
     C = mat.planestress(Young,Poisson)
 elif stressState == 2:
     C = mat.planestrain(Young,Poisson)
 
-# Initialization of global force vector and global stiffness matrix
-global_K = np.zeros((num_dof*num_node, num_dof*num_node))
-force = np.zeros(num_dof*num_node)
+# total increment factor for displacement increments
+tot_inc = 0
 
-for elem in range(0,num_elem):
-    elem_K  = element_stiffness(elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gauss,Points,Weights,C)
+for step in range(0,num_step):
+    step_time_start = time.time()
+    tot_inc = tot_inc + disp_inc
+    disp_old = disp
     
-    index = assembly_index(elements,elem,num_dof,num_node_elem)
+    # Initialization of global force vector and global stiffness matrix
+    global_force = np.zeros(num_tot_var)
+    global_K = np.zeros((num_tot_var, num_tot_var))
+    start_assembly_time = time.time()    
+    for elem in range(0,num_elem):
     
-    global_K = global_stiffness(index,elem_K,global_K)
+        K_uu,K_uphi,K_phiu,K_phiphi = element_stiffness(num_node,elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gauss,Points,Weights,C,disp,disp_old,stress,strain)
+        assemble = assembly()
+        
+        index_u = assemble.assembly_index_u(elements,elem,num_dof_u,num_node_elem)
+        index_phi = assemble.assembly_index_phi(elements,elem,num_dof_phi,num_node_elem,num_tot_var_u)
+        
+        X,Y = np.meshgrid(index_u,index_u,sparse=True)
+        global_K[X,Y] =  global_K[X,Y] + K_uu
+        
+        X,Y = np.meshgrid(index_u,index_phi,sparse=True)
+        global_K[X,Y] =  global_K[X,Y] + np.transpose(K_uphi)
+        
+        X,Y = np.meshgrid(index_phi,index_u,sparse=True)
+        global_K[X,Y] =  global_K[X,Y] + np.transpose(K_phiu)
+        
+        X,Y = np.meshgrid(index_phi,index_phi,sparse=True)
+        global_K[X,Y] =  global_K[X,Y] + K_phiphi
+    end_assembly_time = time.time()
+    
+    for iteration in range(0,max_iter):
+        global_K,global_force,external_force = boundary_condition(num_dof_u,nodes_bc,fixed_dof,global_K,global_force,disp,disp_bc,tot_inc)
+        start_solve_time = time.time()
+        
+        sp_global_K = csc_matrix(global_K)
+        disp_solve = spsolve(sp_global_K,global_force)
+        
+        end_solve_time = time.time()
+        disp = disp + disp_solve
+        
+        for i in range(num_tot_var_u,num_tot_var):
+            if disp[i] > 0.999:
+                disp[i] = 0.999
+            if disp[i] < 0:
+                disp[i] = 0
+        
+        stress, strain = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C)
+        
+        
+        if np.linalg.norm(global_force) <= tol:
+            break
+        
+        
+    step_time_end = time.time()
+    print('step:',step)
+    print('step time:',step_time_end-step_time_start)
+    print('assembly time:',end_assembly_time-start_assembly_time)
+    print('solve time:',end_solve_time-start_solve_time)
+end_time = time.time()
+print('total time:',end_time-start_time)

@@ -1,13 +1,14 @@
-# # *************************************************************************
-# #                 Implementation of phase-field model of ductile fracture
-# #                      Upadhyayula Sai Viswanadha Sastry
-# #                         Personal Programming Project
-# #                               65130
-# # *************************************************************************
+# *************************************************************************
+#                 Implementation of phase-field model of ductile fracture
+#                      Upadhyayula Sai Viswanadha Sastry
+#                         Personal Programming Project
+#                               65130
+# *************************************************************************
 import numpy as np
 from shape_function import shape_function
 from Bmatrix import Bmatrix
-def element_stiffness(elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gauss,Points,Weights,C):
+from input_parameters import *
+def element_stiffness(num_node,elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gauss,Points,Weights,C,disp,disp_old,stress,strain):
     """
     Function for calculating element stiffness matrix.
 
@@ -45,18 +46,31 @@ def element_stiffness(elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gaus
         element stiffness matrix.
 
     """
-    # total number of element variables
-    num_elem_var = num_node_elem*num_dof
-    # Initialization of element stiffness matrices
-    elem_K = np.zeros((num_elem_var,num_elem_var))
+    num_dof_u = num_dof-1
+    
+    # the number of DOFs for order parameters per node
+    num_dof_phi = num_dof-2
+    
+    # total number of variables for displacements
+    num_tot_var_u = num_node*num_dof_u
+    
+    # total number of displacements per element 
+    num_elem_var_u = num_node_elem*num_dof_u
+    
+    # total number of order parameters per element 
+    num_elem_var_phi = num_node_elem*num_dof_phi
+    # Initialize element stiffness matrices    
+    K_uu = np.zeros((num_elem_var_u,num_elem_var_u))
+    K_uphi = np.zeros((num_elem_var_u,num_elem_var_phi))
+    K_phiu = np.zeros((num_elem_var_phi,num_elem_var_u))
+    K_phiphi = np.zeros((num_elem_var_phi,num_elem_var_phi))
    
-    # Coordinates of nodes of current element
-    elem_coord = np.zeros((num_node_elem,num_dim))
-    for j in range(0,num_node_elem):
-        elem_node = elements[elem,j]
-        for k in range(0,num_dim):
-            elem_coord[j,k] = nodes[elem_node-1,k]
+    elem_node = elements[elem,:]
+    i_tot_var = num_tot_var_u + elem_node
+    elem_phi = disp[i_tot_var-1]
+    elem_phi_dot = disp[i_tot_var-1] - disp_old[i_tot_var-1]
 
+    elem_coord = nodes[elem_node-1,:]
     for j in range(0,num_Gauss**num_dim):
         gpos = Points[j]
         
@@ -69,18 +83,32 @@ def element_stiffness(elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gaus
             N,dNdxi = shapefunction.four_node_quadrilateral_element(gpos)
         elif num_node_elem == 8:
             N,dNdxi = shapefunction.eight_node_quadrilateral_element(gpos)
-        
-        Jacobian = np.matmul(dNdxi,elem_coord)
+            
+        Jacobian = np.matmul(dNdxi,elem_coord)#
         det_Jacobian = np.linalg.det(Jacobian)
         if det_Jacobian <= 0:
             raise ValueError('Solution is terminated since, determinant of Jacobian is either zero or negative.')
-        
+           
         Jacobian_inv = np.linalg.inv(Jacobian)
         dNdX = np.matmul(Jacobian_inv,dNdxi)
-
+        phi = np.matmul(elem_phi,N[0])
+        phi_dot = np.matmul(elem_phi_dot,N[0])
+            
+        phi_func = 0
+        if phi_dot < 0:
+            phi_func = -phi_dot
+            
         # Compute B matrix
         B = Bmatrix()
         Bmat = B.Bmatrix_linear(dNdX,num_node_elem)
+        K_uu = K_uu + np.matmul(np.matmul(np.transpose(Bmat),C),Bmat)*(((1-phi)**2)+k_const)*Weights[j]*det_Jacobian
+            
+        K_uphi = K_uphi -2*(1-phi)*np.matmul(np.transpose(Bmat),np.transpose(stress[elem])*N[0])*Weights[j]*det_Jacobian
+        K_phiu = np.transpose(K_uphi)
+        # K_phiu = K_phiu -2*(1-phi)*np.matmul(stress[elem],Bmat)*N[0,j]*Weights[j]*det_Jacobian
         
-        elem_K = elem_K + np.matmul(np.matmul(np.transpose(Bmat),C),Bmat)*Weights[j]*det_Jacobian
-    return elem_K
+        strain_energy = 0.5*np.dot(stress[elem,j,:],strain[elem,j,:])
+        K_phiphi = K_phiphi + G_c*l_0*np.matmul(np.transpose(dNdX),dNdX)*Weights[j]*det_Jacobian
+        
+        K_phiphi = K_phiphi + (((G_c/l_0)+2*strain_energy)+(neta/delta_time)*phi_func)*np.matmul(np.transpose([N[0]]),[N[0]])*Weights[j]*det_Jacobian
+    return K_uu,K_uphi,K_phiu,K_phiphi
