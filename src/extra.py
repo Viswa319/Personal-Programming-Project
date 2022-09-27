@@ -237,3 +237,25 @@
 #                 print('hey3')
 #             if np.array_equiv(np.round(K_phiphi,6),np.round(K_phiphi_1[elem],6)) is False:
 #                 print('hey4')
+
+# for i in range(len(nodes_bc)):
+#     lnode = nodes_bc[i]
+#     for j in range(num_dof_u):
+#         if fixed_dof[i,j] == 1:
+#             itotv = ((lnode-1)*num_dof_u+j)
+#             R_ext[itotv] = R_ext[itotv]-np.dot(global_K_disp[itotv,:],disp[0:num_tot_var])
+
+# fixed_dof = np.zeros(num_tot_var_u)
+# fixed_dof[(top*2)+1] = 1
+# fixed_dof[bot*2] = 1
+# fixed_dof[bot*2+1] = 1
+
+# disp_bc = np.zeros(num_tot_var_u)
+# disp_bc[top*2+1] = 0.1
+
+# disp_bc_new += (1/num_step)*disp_bc
+# disp_bc[top*2+1] = tot_inc
+
+# global_force_disp = F_ext + R_ext - F_int
+
+#tolerance = np.linalg.norm(global_force_disp)/np.linalg.norm(F_ext + R_ext)

@@ -5,21 +5,19 @@
 #                               65130
 # *************************************************************************
 import numpy as np
-from scipy import linalg
-import numpy.polynomial.legendre as ptwt
+from scipy.sparse import csc_matrix
+from scipy.sparse.linalg import spsolve
 from geometry import quadrature_coefficients
 from material_routine import material_routine 
 from element_stiffness import element_stiffness
 from assembly_index import assembly
 from boundary_condition import boundary_condition
 from solve_stress_strain import solve_stress_strain
-from global_stiffness import global_stiffness_assembly
-from shape_function import shape_function
-from Bmatrix import Bmatrix
 from input_parameters import *
+from residual import residual
 import time
-from scipy.sparse import csc_matrix
-from scipy.sparse.linalg import spsolve
+from vtk_generator import vtk_generator
+
 start_time = time.time()
 # total number of variables in the solution
 num_tot_var = num_node*num_dof
@@ -32,15 +30,6 @@ num_dof_phi = num_dof-2
 
 # total number of variables for displacements
 num_tot_var_u = num_node*num_dof_u
-
-# total number of element variables 
-num_elem_var = num_node_elem*num_dof
-
-# total number of displacements per element 
-num_elem_var_u = num_node_elem*num_dof_u
-
-# total number of order parameters per element 
-num_elem_var_phi = num_node_elem*num_dof_phi
 
 # total number of Gauss points used for integration in n-dimension
 num_Gauss_2D = num_Gauss**num_dim
@@ -68,9 +57,6 @@ for i in range(0,len(crack)):
     
 
 # Call Guass quadrature points and weights using inbuilt function
-PtsWts = ptwt.leggauss(num_Gauss)
-# points = PtsWts[0]
-# weights = PtsWts[1]
 Points,Weights = quadrature_coefficients(num_Gauss)
 
 # Call Stiffness tensor from material routine
@@ -91,14 +77,15 @@ for step in range(0,num_step):
     # Initialization of global force vector and global stiffness matrix
     global_force = np.zeros(num_tot_var)
     global_K = np.zeros((num_tot_var, num_tot_var))
+    
     start_assembly_time = time.time()    
     for elem in range(0,num_elem):
     
-        K_uu,K_uphi,K_phiu,K_phiphi = element_stiffness(num_node,elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gauss,Points,Weights,C,disp,disp_old,stress,strain)
+        K_uu,K_uphi,K_phiu,K_phiphi = element_stiffness(elem,Points,Weights,C,disp,disp_old,stress,strain)
         assemble = assembly()
         
-        index_u = assemble.assembly_index_u(elements,elem,num_dof_u,num_node_elem)
-        index_phi = assemble.assembly_index_phi(elements,elem,num_dof_phi,num_node_elem,num_tot_var_u)
+        index_u = assemble.assembly_index_u(elem,num_dof_u)
+        index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_u)
         
         X,Y = np.meshgrid(index_u,index_u,sparse=True)
         global_K[X,Y] =  global_K[X,Y] + K_uu
@@ -131,15 +118,26 @@ for step in range(0,num_step):
         
         stress, strain = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C)
         
-        
         if np.linalg.norm(global_force) <= tol:
             break
-        
-        
+        global_force = residual(num_node,elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gauss,Points,Weights,C,disp,disp_old,stress,strain,global_force)
     step_time_end = time.time()
-    print('step:',step)
+    print('step:',step+1)
     print('step time:',step_time_end-step_time_start)
     print('assembly time:',end_assembly_time-start_assembly_time)
     print('solve time:',end_solve_time-start_solve_time)
+    
+    if np.mod(step,num_print-1) == 0:
+        deflection = np.zeros((num_node,num_dim))
+        order_parameter = np.zeros(num_node)
+        for i in range(0,num_node):
+            for j in range(0,num_dof_u):
+                itotv = i*num_dof+j
+                deflection[i,j] = nodes[i,j]+10*disp[itotv]
+                jtotv = num_tot_var_u+i
+                order_parameter[i] = disp[jtotv]
+        file_name = 'time_{}.vtk'.format(step)
+        vtk_generator(file_name,deflection,order_parameter)
+    
 end_time = time.time()
 print('total time:',end_time-start_time)

@@ -17,9 +17,10 @@ class material_routine:
         Stiffness tensor.
 
     """
-    def __init__(self):
-        pass
-    def planestress(self,Young,Poisson):  
+    def __init__(self,Young,Poisson):
+        self.Young = Young
+        self.Poisson = Poisson
+    def planestress(self):  
         """
         Caculates stiffness tensor for plane stress condition.
 
@@ -37,12 +38,12 @@ class material_routine:
         """
         Ce = np.zeros((3, 3))
         #________Compute material stiffness matrix for plane stress
-        you = (Young)/(1-Poisson**2)
+        you = (self.Young)/(1-self.Poisson**2)
         Ce[0, 0] = Ce[1, 1] = you*1
-        Ce[0, 1] = Ce[1, 0] = you*Poisson
-        Ce[2, 2] = you*((1-Poisson)/2)
+        Ce[0, 1] = Ce[1, 0] = you*self.Poisson
+        Ce[2, 2] = you*((1-self.Poisson)/2)
         return Ce
-    def planestrain(self,Young,Poisson):
+    def planestrain(self):
         """
         Caculates stiffness tensor for plane strain condition.
 
@@ -60,8 +61,8 @@ class material_routine:
         """
         Ce = np.zeros((3, 3))
         #________Compute material stiffness matrix for plane strain
-        you = ((Young)*(1-Poisson))/((1-Poisson*2)*(1+Poisson))
+        you = ((self.Young)*(1-self.Poisson))/((1-self.Poisson*2)*(1+self.Poisson))
         Ce[0,0] = Ce[1,1] = you*1
-        Ce[0,1] = Ce[1,0] = you*(Poisson/(1-Poisson))
-        Ce[2,2] = you*((1-2*Poisson)/(2*(1-Poisson)))
+        Ce[0,1] = Ce[1,0] = you*(self.Poisson/(1-self.Poisson))
+        Ce[2,2] = you*((1-2*self.Poisson)/(2*(1-self.Poisson)))
         return Ce

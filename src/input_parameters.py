@@ -99,10 +99,10 @@ Poisson = props[1]
 # Inputs for time integration parameters
 
 # number of time steps
-num_step = 10
+num_step = 4000
 
 # print frequency to output the results to file
-num_print = 1
+num_print = 25
 
 # time increment for numerical integration
 delta_time = 1.0

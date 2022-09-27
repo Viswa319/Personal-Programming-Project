@@ -4,11 +4,12 @@
 #                         Personal Programming Project
 #                               65130
 # *************************************************************************
+from input_abaqus import *
 import numpy as np
 class assembly:
     def __init__(self):
         pass
-    def assembly_index_u(self,elements,elem,num_dof_u,num_node_elem):
+    def assembly_index_u(self,elem,num_dof_u):
         """
         Function to generate a vector which consists indices of global matrix for respective element belongs to first field parameter. 
     
@@ -29,16 +30,16 @@ class assembly:
             a vector which consists indices of global matrix for respective element belongs to first field parameter.
     
         """
-        num_elem_var = num_node_elem*num_dof_u # total number of element variables
+        num_elem_var_u = num_node_elem*num_dof_u # total number of element variables
         k = 0
-        index = np.zeros(num_elem_var,int)
+        index = np.zeros(num_elem_var_u,int)
         for i in range(0,num_node_elem):
             temp = (elements[elem,i]-1)*num_dof_u
             for j in range(0,num_dof_u):
                 index[k] = temp+j
                 k = k+1
         return index
-    def assembly_index_phi(self,elements,elem,num_dof_phi,num_node_elem,num_tot_var_u):
+    def assembly_index_phi(self,elem,num_dof_phi,num_to_var_u):
         """
         Function to generate a vector which consists indices of global matrix for respective element belongs to second field parameter. 
     
@@ -65,6 +66,7 @@ class assembly:
         for i in range(0,num_node_elem):
             temp = (elements[elem,i]-1)*num_dof_phi
             for j in range(0,num_dof_phi):
-                index[k] = temp+j+num_tot_var_u
+                # index[k] = temp+j+num_tot_var_u
+                index[k] = temp+j
                 k = k+1
         return index

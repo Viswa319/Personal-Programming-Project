@@ -6,9 +6,10 @@
 # *************************************************************************
 import numpy as np
 class Bmatrix:
-    def __init__(self):
-        pass
-    def Bmatrix_linear(self,dNdX,num_node_elem):
+    def __init__(self,dNdX,num_node_elem):
+        self.dNdX = dNdX
+        self.num_node_elem = num_node_elem
+    def Bmatrix_disp(self):
         """
         Function for computing strain and displacement connectivity matrix (B)
 
@@ -25,11 +26,15 @@ class Bmatrix:
             strain and displacement connectivity matrix of a node.
 
         """
-        B = np.zeros((3, 2*num_node_elem))
-        for I in range(0, num_node_elem):
-            J = 2*I
-            K = 2*I+1
-            B[0, J] = B[2, K] = dNdX[0, I]# dNdx[i]
-            B[0, K] = B[1, J] = 0
-            B[1, K] = B[2, J] = dNdX[1, I]# dNdy[i]
+        B = np.zeros((3, 2*self.num_node_elem))
+        for i in range(0, self.num_node_elem):
+            j = 2*i
+            k = 2*i+1
+            B[0, j] = B[2, k] = self.dNdX[0, i]# dNdx[i]
+            B[0, k] = B[1, j] = 0
+            B[1, k] = B[2, j] = self.dNdX[1, i]# dNdy[i]
+        return B
+    
+    def Bmatrix_phase_field(self):
+        B = self.dNdX
         return B
