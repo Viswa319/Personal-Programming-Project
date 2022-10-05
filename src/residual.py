@@ -39,23 +39,13 @@ def residual(num_node,elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gaus
         for j in range(0,num_Gauss**num_dim):
             gpos = Points[j]
             
-            shapefunction = shape_function()
-            if num_node_elem == 2:
-                N,dNdxi = shapefunction.two_node_line_element(gpos)
-            elif num_node_elem == 3:
-                N,dNdxi = shapefunction.three_node_triangular_element(gpos)
-            elif num_node_elem == 4:
-                N,dNdxi = shapefunction.four_node_quadrilateral_element(gpos)
-            elif num_node_elem == 8:
-                N,dNdxi = shapefunction.eight_node_quadrilateral_element(gpos)
-                    
-            Jacobian = np.matmul(dNdxi,elem_coord)#
-            det_Jacobian = np.linalg.det(Jacobian)
+            shape = shape_function(num_node_elem,gpos,elem_coord)
+            N = shape.get_shape_function()
+            dNdX = shape.get_shape_function_derivative()
+            det_Jacobian = shape.get_det_Jacobian()
             if det_Jacobian <= 0:
                 raise ValueError('Solution is terminated since, determinant of Jacobian is either zero or negative.')
-                   
-            Jacobian_inv = np.linalg.inv(Jacobian)
-            dNdX = np.matmul(Jacobian_inv,dNdxi)
+
             phi = np.matmul(elem_phi,N[0])
             phi_dot = np.matmul(elem_phi_dot,N[0])
                     
@@ -74,8 +64,8 @@ def residual(num_node,elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gaus
                 
         assemble = assembly()
         
-        index_u = assemble.assembly_index_u(elements,elem,num_dof_u,num_node_elem)
-        index_phi = assemble.assembly_index_phi(elements,elem,num_dof_phi,num_node_elem,num_tot_var_u)
+        index_u = assemble.assembly_index_u(elem,num_dof_u,num_node_elem,elements)
+        index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_u,num_node_elem,elements)
         
         global_force[index_u] = global_force[index_u] + R_elem_u
         global_force[index_phi] = global_force[index_phi] + R_elem_phi

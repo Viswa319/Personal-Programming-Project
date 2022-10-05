@@ -4,12 +4,12 @@
 #                         Personal Programming Project
 #                               65130
 # *************************************************************************
-from input_abaqus import *
+# from input_parameters import *
 import numpy as np
 class assembly:
     def __init__(self):
         pass
-    def assembly_index_u(self,elem,num_dof_u):
+    def assembly_index_u(self,elem,num_dof_u,num_node_elem,elements):
         """
         Function to generate a vector which consists indices of global matrix for respective element belongs to first field parameter. 
     
@@ -39,7 +39,7 @@ class assembly:
                 index[k] = temp+j
                 k = k+1
         return index
-    def assembly_index_phi(self,elem,num_dof_phi,num_to_var_u):
+    def assembly_index_phi(self,elem,num_dof_phi,num_tot_var_u,num_node_elem,elements):
         """
         Function to generate a vector which consists indices of global matrix for respective element belongs to second field parameter. 
     

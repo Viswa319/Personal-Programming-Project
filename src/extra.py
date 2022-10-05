@@ -259,3 +259,67 @@
 # global_force_disp = F_ext + R_ext - F_int
 
 #tolerance = np.linalg.norm(global_force_disp)/np.linalg.norm(F_ext + R_ext)
+
+# # Getting the nodes near crack
+# crack = []
+# for i in range(0,num_node):
+#     if 0 <= nodes[i,0] and nodes[i,1] == 0:
+#         crack.append(i)
+
+# # assigning order parameter values as 1
+# for i in range(0,len(crack)):
+#     phi[crack[i]] = 1
+
+# disp_bot = np.zeros((len(bot),num_dim))
+# disp_top = np.zeros((len(top),num_dim))
+# disp_right = np.zeros((len(bot),num_dim))
+# disp_left = np.zeros((len(top),num_dim))
+
+# fixed_dof_bot = np.zeros((len(bot),num_dim),int) # fixed degrees of freedom for each node
+# fixed_dof_top = np.zeros((len(top),num_dim),int) # fixed degrees of freedom for each node
+# fixed_dof_left = np.zeros((len(left),num_dim),int) # fixed degrees of freedom for each node
+# fixed_dof_right = np.zeros((len(right),num_dim),int) # fixed degrees of freedom for each node
+# fixed_dof_bot[:,0] = 1
+# fixed_dof_bot[:,1] = 1
+# fixed_dof_top[:,1] = 1
+# fixed_dof_top[:,0] = 1
+# fixed_dof_right[:,1] = 1
+# fixed_dof_right[:,1] = 1
+# fixed_dof_left[:,1] = 1
+# fixed_dof_left[:,1] = 1
+# fixed_dof = np.r_[fixed_dof_bot,fixed_dof_top,fixed_dof_right,fixed_dof_left]
+# disp_bc = np.r_[disp_bot,disp_top,disp_right,disp_left]
+
+# fixed_dof[left*2] = 1
+# fixed_dof[left*2+1] = 1
+# fixed_dof[right*2] = 1
+# fixed_dof[right*2+1] = 1
+
+# def boundary_condition(num_dof_u,fixed_dof,global_K,global_force,disp,disp_bc,tot_inc):
+#     # num_fixnodes = len(nodes_bc)
+#     num_tot_var = len(disp)
+#     for i in range(num_tot_var):
+#         if fixed_dof[i] == 1:
+#             for j in range(num_tot_var):
+#                 if fixed_dof[j] == 0:
+#                     global_force[j] = global_force[j] - global_K[j,i] * disp_bc[i]
+#             global_K[i,:] = 0.0
+#             global_K[:,i] = 0.0
+#             global_K[i,i] = 1.0
+#             global_force[i] = disp_bc[i]
+#     return global_K,global_force
+
+            # self.strain_energy_new[self.elem,j] = 0.5*np.dot(self.stress[self.elem,j,:],self.strain[self.elem,j,:])
+            
+            # if self.strain_energy_new[self.elem,j] > self.strain_energy[self.elem,j]:
+            #     H = self.strain_energy_new[self.elem,j]
+            # else:
+            #     H = self.strain_energy[self.elem,j]
+            
+# k = 0
+        # for i in range(num_tot_var_u):
+        #     if fixed_dof[i] != 1: 
+        #         disp[i] = disp_reduced[k]
+        #         k = k+1
+        #     if fixed_dof[i] == 1:
+        #         disp[i] = disp_bc[i]

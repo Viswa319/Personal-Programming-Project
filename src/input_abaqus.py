@@ -63,6 +63,18 @@ with open('Job-1.inp', "r") as f:
         elements[i-start_elem,0:num_node_elem] = (lines[i].split(','))[1:num_node_elem+1]
     
     del start_elem,end_elem,start_node,end_node
+    
+# nodes = np.array([[0,0],[1,0],[1,1],[0,1]])
+
+# num_node = len(nodes)
+
+# elements = np.array([[1,2,3,4]])
+# num_elem = len(elements)
+
+# num_node_elem = 4
+
+# num_dim = 2
+
 # if stressState == 1 plane stress; if stressState = 2 plane strain
 stressState = 2
       
@@ -70,7 +82,7 @@ stressState = 2
 num_dof = 3
         
 # number of Gauss points for integration
-num_Gauss = 4
+num_Gauss = 2
 
 # number of independent stress components
 num_stress = 3
@@ -98,7 +110,7 @@ Poisson = 0.3
 # Inputs for time integration parameters
 
 # number of time steps
-num_step = 100000
+num_step = 10000
 
 # print frequency to output the results to file
 num_print = 25
@@ -113,4 +125,4 @@ max_iter = 5
 max_tol = 5e-3
 
 # displacmenet increment per time steps
-disp_inc = 0.000001 # mm
+disp_inc = 1e-6 # mm

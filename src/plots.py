@@ -155,7 +155,7 @@ def plot_deflection(nodes,Disp_anal,Disp_EFG):
     plt.show()
     
 
-def plot_stress(nodes,Stress_anal,Stress_EFG,point):
+def plot_stress(nodes,Stress_anal,Stress_num,point):
     """
     Function to plot shear stress of beam at given point.
     If any other stress is required, then change in plots
@@ -176,7 +176,7 @@ def plot_stress(nodes,Stress_anal,Stress_EFG,point):
     """
     y_0 = np.where(nodes[:,0] == point)[0] # bottom edge nodes
     fig1,ax1 = plt.subplots()
-    ax1.plot(nodes[y_0][:,1],Stress_EFG[:,y_0][2],ls='--',label = 'EFG')
+    ax1.plot(nodes[y_0][:,1],Stress_num[:,y_0][2],ls='--',label = 'Numerical')
     ax1.plot(nodes[y_0][:,1],Stress_anal[:,y_0][2],ls='-.',label = 'Analytical')
     ax1.set_title('Normal stress $\sigma$$_{xy}$ at x = L/2')
     ax1.set_xlabel('y[m]')

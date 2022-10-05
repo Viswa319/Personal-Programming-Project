@@ -66,3 +66,6 @@ class material_routine:
         Ce[0,1] = Ce[1,0] = you*(self.Poisson/(1-self.Poisson))
         Ce[2,2] = you*((1-2*self.Poisson)/(2*(1-self.Poisson)))
         return Ce
+    
+    def plasticity(self):
+        C

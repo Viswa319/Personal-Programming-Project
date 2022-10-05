@@ -40,6 +40,9 @@ stress = np.zeros((num_elem,num_Gauss_2D,num_stress))
 # Initialize strain component values at the integration points of all elements 
 strain = np.zeros((num_elem,num_Gauss_2D,num_stress))
 
+# Initialize strain energy 
+strain_energy = np.zeros((num_elem,num_Gauss_2D))
+
 # Initialize displacment values
 disp = np.zeros(num_tot_var)
 
@@ -60,11 +63,11 @@ for i in range(0,len(crack)):
 Points,Weights = quadrature_coefficients(num_Gauss)
 
 # Call Stiffness tensor from material routine
-mat = material_routine()
-if stressState == 1:    
-    C = mat.planestress(Young,Poisson)
-elif stressState == 2:
-    C = mat.planestrain(Young,Poisson)
+mat = material_routine(Young,Poisson)
+if stressState == 1: # Plane stress   
+    C = mat.planestress()
+elif stressState == 2: # Plane strain
+    C = mat.planestrain()
 
 # total increment factor for displacement increments
 tot_inc = 0
@@ -80,12 +83,13 @@ for step in range(0,num_step):
     
     start_assembly_time = time.time()    
     for elem in range(0,num_elem):
-    
-        K_uu,K_uphi,K_phiu,K_phiphi = element_stiffness(elem,Points,Weights,C,disp,disp_old,stress,strain)
+        
+        elem_stiffness = element_stiffness()
+        K_uu,K_uphi,K_phiu,K_phiphi = elem_stiffness.element_stiffness_monolithic(elem,Points,Weights,C,disp,disp_old,stress,strain)
         assemble = assembly()
         
-        index_u = assemble.assembly_index_u(elem,num_dof_u)
-        index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_u)
+        index_u = assemble.assembly_index_u(elem,num_dof_u,num_node_elem,elements)
+        index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_u,num_node_elem,elements)
         
         X,Y = np.meshgrid(index_u,index_u,sparse=True)
         global_K[X,Y] =  global_K[X,Y] + K_uu
@@ -116,7 +120,9 @@ for step in range(0,num_step):
             if disp[i] < 0:
                 disp[i] = 0
         
-        stress, strain = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C)
+        get_stress = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,strain_energy)
+        strain = get_stress.solve_strain
+        stress = get_stress.solve_stress
         
         if np.linalg.norm(global_force) <= tol:
             break

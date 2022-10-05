@@ -14,8 +14,11 @@ from assembly_index import assembly
 from boundary_condition import boundary_condition
 from solve_stress_strain import solve_stress_strain
 from input_abaqus import *
+from shape_function import shape_function
+from Bmatrix import Bmatrix
+import matplotlib.pyplot as plt
 # from global_assembly import global_assembly
-# from plots import *
+from plots import *
 import time
 
 start_time = time.time()
@@ -43,144 +46,89 @@ stress = np.zeros((num_elem,num_Gauss_2D,num_stress))
 # Initialize strain component values at the integration points of all elements 
 strain = np.zeros((num_elem,num_Gauss_2D,num_stress))
 
+# Initialize strain energy 
 strain_energy = np.zeros((num_elem,num_Gauss_2D))
-# Initialize displacment values
+
+# Initialize displacment values and displacement boundary conditions
 disp = np.zeros(num_tot_var_u)
+disp_bc = np.zeros(num_tot_var_u)
 
 # Initialize phi (field parameter) values
 phi = np.zeros(num_tot_var_phi)
 
-# # Getting the nodes near crack
-# crack = []
-# for i in range(0,num_node):
-#     if 0 <= nodes[i,0] and nodes[i,1] == 0:
-#         crack.append(i)
+# External force vector
+F_ext = np.zeros(num_tot_var_u)
 
-# # assigning order parameter values as 1
-# for i in range(0,len(crack)):
-#     phi[crack[i]] = 1
-    
+# Internal force vector
+F_int = np.zeros(num_tot_var_u)
+
+# total increment factor for displacement increments
+tot_inc = 0
 
 # Call Guass quadrature points and weights using inbuilt function
 Points,Weights = quadrature_coefficients(num_Gauss)
 
 # Call Stiffness tensor from material routine
-mat = material_routine()
-if stressState == 1:    
-    C = mat.planestress(Young,Poisson)
-elif stressState == 2:
-    C = mat.planestrain(Young,Poisson)
+mat = material_routine(Young,Poisson)
+if stressState == 1: # Plane stress   
+    C = mat.planestress()
+elif stressState == 2: # Plane strain
+    C = mat.planestrain()
 
-# total increment factor for displacement increments
-tot_inc = 0
-
-# Boundary points
+# Boundary points for all edges
 bot = np.where(nodes[:,1] == min(nodes[:,1]))[0] # bottom edge nodes
 left = np.where(nodes[:,0] == min(nodes[:,0]))[0] # left edge nodes
 right = np.where(nodes[:,0] == max(nodes[:,0]))[0] # right edge nodes
 top = np.where(nodes[:,1] == max(nodes[:,1]))[0] # top edge nodes
 
-nodes_bc = np.r_[bot,top]
-disp_bot = np.zeros((len(bot),num_dim))
-disp_top = np.zeros((len(top),num_dim))
+# Getting the fixed degrees of freedom at all nodes
+# If boundary condition is prescribed at certain node, then it is given value 1 or else 0
+fixed_dof = np.zeros(num_tot_var_u)
+fixed_dof[(top*2)+1] = 1
+# fixed_dof[(left*2)] = 1
+fixed_dof[(bot*2)+1] = 1
+fixed_dof[bot*2] = 1
 
-fixed_dof_bot = np.zeros((len(bot),num_dim),int) # fixed degrees of freedom for each node
-fixed_dof_top = np.zeros((len(top),num_dim),int) # fixed degrees of freedom for each node
-# disp_top[:,1] = disp_inc
-fixed_dof_bot[:,0] = 1
-fixed_dof_bot[:,1] = 1
-fixed_dof_top[:,1] = 1
-
-fixed_dof = np.r_[fixed_dof_bot,fixed_dof_top]
-disp_bc = np.r_[disp_bot,disp_top]
-
-
-# External force vector
-F_ext = np.zeros(num_tot_var_u)
-
-# Reaction force vector
-R_ext = np.zeros(num_tot_var_u)
-
-# Internal force vector
-F_int = np.zeros(num_tot_var_u)
-
-# disp_bc_new = np.zeros(num_tot_var_u)
-# globel = global_assembly(num_elem,Points,Weights,C,disp,phi,stress,strain,num_tot_var_u,num_tot_var_phi,num_dof_u,num_dof_phi)
-for step in range(0,num_step):
-    step_time_start = time.time()
+disp_plot = []
+force_plot = []
+# step = 0
+# while tot_inc <= 0.01:
+for step in range(num_step):
+    # step = step+1
+    print('step:',step+1)
+    step_time_start = time.time() # for computing step time
+    
+    
+    # if tot_inc <= 0.005:
+    #     disp_inc = 1e-5
+    # else:
+    #     disp_inc = 1e-6
+      
+    # displacement load increment for every step
     tot_inc = tot_inc + disp_inc
+    # prescribing essential boundary conditions 
+    disp_bc[top*2+1] = tot_inc
     
-    disp_top[:,1] = tot_inc
-    disp_bc = np.r_[disp_bot,disp_top]
+    max_iteration_reached = False
     
-    # Initialization of global force vector and global stiffness matrix for  displacement
-    global_force_disp = np.zeros(num_tot_var_u)
-    global_K_disp = np.zeros((num_tot_var_u, num_tot_var_u))
-
-    for elem in range(0,num_elem):
-        elem_stiff = element_staggered(elem,Points,Weights,C,disp,phi,stress,strain,strain_energy)
-        K_uu = elem_stiff.element_stiffness_displacement()
-        assemble = assembly()
-        
-        index_u = assemble.assembly_index_u(elem,num_dof_u)
-        
-        X,Y = np.meshgrid(index_u,index_u,sparse=True)
-        global_K_disp[X,Y] =  global_K_disp[X,Y] + K_uu
+    get_stress = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,strain_energy)
+    strain_energy = get_stress.solve_strain_energy
     
-    global_force_disp = F_int - F_ext
-    
-    # Impose essential boundary conditions
-    global_K_disp,global_force_disp = boundary_condition(num_dof_u,nodes_bc,fixed_dof,global_K_disp,global_force_disp,disp,disp_bc,tot_inc)
-    max_iteration_reached = False            
-    for iteration in range(max_iter):
-        
-        sp_global_K_disp = csc_matrix(global_K_disp)
-        disp_solve = spsolve(sp_global_K_disp,global_force_disp)
-        
-        disp = disp_solve
-        
-        stress, strain = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C)
-        
-        for elem in range(0,num_elem):
-            elem_stiff = element_staggered(elem,Points,Weights,C,disp,phi,stress,strain,strain_energy)
-            F_int_elem = elem_stiff.element_internal_force()
-            assemble = assembly()
-            
-            index_u = assemble.assembly_index_u(elem,num_dof_u)
-            
-            F_int[index_u] = F_int[index_u]+F_int_elem
-        
-        # update global force and check convergence
-        global_force_disp = F_int - F_ext
-        tolerance = np.linalg.norm(global_force_disp)
-        
-        print("Solving for displacement: Iteration ---> {} --- tolerance = {}".format(iteration+1, tolerance))
-        if (tolerance < max_tol):
-            print("Displacement solution converged!")
-            break 
-        
-        if (iteration == max_iter-1):
-            print("Displacement solution has achieved its maximum number of iterations.!")
-            print("Displacement solution failed to converge!")
-            max_iteration_reached = True
-            break 
-    if(max_iteration_reached == True):
-        break 
     # Initialization of global force vector and global stiffness matrix for phase field parameter
     global_force_phi = np.zeros(num_tot_var_phi)
     global_K_phi = np.zeros((num_tot_var_phi, num_tot_var_phi))
          
     for elem in range(num_elem):
-        elem_stiff = element_staggered(elem,Points,Weights,C,disp,phi,stress,strain,strain_energy)
-        K_phiphi,residual_phi,H_n = elem_stiff.element_stiffness_field_parameter()
+        elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+        K_phiphi = elem_stiff.element_stiffness_field_parameter(G_c,l_0)
+            
         assemble = assembly()
         
-        index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_phi)
+        index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_phi,num_node_elem,elements)
         
         X,Y = np.meshgrid(index_phi,index_phi,sparse=True)
         global_K_phi[X,Y] =  global_K_phi[X,Y] + K_phiphi
-        # global_force_phi[index_phi] = global_force_phi[index_phi]+residual_phi
-
+        del X,Y
     for iteration in range(max_iter):
         sp_global_K_phi = csc_matrix(global_K_phi)
         phi_solve = spsolve(sp_global_K_phi,-global_force_phi)
@@ -194,11 +142,11 @@ for step in range(0,num_step):
                 phi[i] = 0
         
         for elem in range(num_elem):
-            elem_stiff = element_staggered(elem,Points,Weights,C,disp,phi,stress,strain,strain_energy)
-            residual_elem_phi,H_n = elem_stiff.element_residual_field_parameter()
+            elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+            residual_elem_phi = elem_stiff.element_residual_field_parameter(G_c,l_0)
             assemble = assembly()
             
-            index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_phi)
+            index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_phi,num_node_elem,elements)
 
             global_force_phi[index_phi] = global_force_phi[index_phi]+residual_elem_phi
         tolerance = np.linalg.norm(global_force_phi)
@@ -206,19 +154,79 @@ for step in range(0,num_step):
         if (tolerance < max_tol):
             print("Phase field solution converged!")
             break 
+
         if (iteration == max_iter-1):
-            print("Phase field solution has achieved its maximum number of iterations.!")
-            print("Phase field solution failed to converge!")
+            print("Phase field solution has achieved its maximum number of iterations and failed to converge.!")
+            max_iteration_reached = True
+            break 
+    if(max_iteration_reached == True):
+        break
+    
+    # Initialization of global force vector and global stiffness matrix for  displacement
+    global_force_disp = np.zeros(num_tot_var_u)
+    global_K_disp = np.zeros((num_tot_var_u, num_tot_var_u))
+
+    for elem in range(0,num_elem):
+        elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+        K_uu = elem_stiff.element_stiffness_displacement(C,k_const)
+        assemble = assembly()
+        
+        index_u = assemble.assembly_index_u(elem,num_dof_u,num_node_elem,elements)
+        
+        X,Y = np.meshgrid(index_u,index_u,sparse=True)
+        global_K_disp[X,Y] =  global_K_disp[X,Y] + K_uu
+        del X,Y
+    global_force_disp = F_int - F_ext
+    
+    # Impose essential boundary conditions
+    global_K_disp,global_force_disp = boundary_condition(num_dof_u,fixed_dof,global_K_disp,global_force_disp,disp,disp_bc)
+    
+    for iteration in range(max_iter):
+        
+        sp_global_K_disp = csc_matrix(global_K_disp)
+        disp_reduced = spsolve(sp_global_K_disp,-global_force_disp)
+        
+        disp = disp_reduced
+        
+        get_stress = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,strain_energy)
+        strain = get_stress.solve_strain
+        stress = get_stress.solve_stress
+        
+        for elem in range(0,num_elem):
+            elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+            F_int_elem = elem_stiff.element_internal_force(k_const)
+
+            assemble = assembly()
+
+            index_u = assemble.assembly_index_u(elem,num_dof_u,num_node_elem,elements)
+            
+            F_int[index_u] = F_int[index_u]+F_int_elem
+        
+        tolerance = np.linalg.norm(global_force_disp)
+        # update global force and check convergence
+        # global_force_disp = F_int - F_ext
+        
+        print("Solving for displacement: Iteration ---> {} --- norm_1 = {} and norm_2 = {}".format(iteration+1, np.linalg.norm(global_force_disp),0.005*np.linalg.norm(F_int)))
+        # if (tolerance < max_tol):
+        #     print("Displacement solution converged!")
+        #     break 
+        
+        if (np.linalg.norm(global_force_disp) < 0.005*np.linalg.norm(F_int)):
+            print("Displacement solution converged!")
+            break 
+        if (iteration == max_iter-1):
+            print("Displacement solution has achieved its maximum number of iterations and failed to converge.!")
             max_iteration_reached = True
             break 
     if(max_iteration_reached == True):
         break 
+    
     step_time_end = time.time()
-    print('step:',step+1)
     print('step time:',step_time_end-step_time_start)
     
-    
+    disp_plot.append(tot_inc)
+    force_plot.append(sum(F_int[(bot*2)+1]))
 end_time = time.time()
 print('total time:',end_time-start_time)
-
-# plot_nodes_and_boundary(nodes)
+plt.plot(disp_plot,force_plot)
+plot_nodes_and_boundary(nodes)
