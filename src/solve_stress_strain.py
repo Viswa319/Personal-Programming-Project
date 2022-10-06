@@ -8,8 +8,39 @@ import numpy as np
 from shape_function import shape_function
 from Bmatrix import Bmatrix
 class solve_stress_strain():
-    def __init__(self,num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,Strain_energy):
-        self.num_elem = num_elem
+    def __init__(self,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,strain_energy):
+        """
+        Class to compute stress, strain and strain energy at integration points for each element
+
+        Parameters
+        ----------
+        num_Gauss_2D : int
+            Total number of Gauss points used for integration in 2-dimension.
+        num_stress : int
+            Number of independent stress components.
+        num_node_elem : int
+            Number of nodes per element.
+        num_dof_u : int
+            The number of DOFs for displacements per node.
+        elements : Array of int, size(num_elem,num_node_elem)
+            Element connectivity matrix.
+        disp : Array of float64, size(num_tot_var_u)
+            Displacements.
+        Points : Array of float64, size(num_dim,num_Gauss**num_dim)
+            Gauss points used for integration.
+        nodes : Array of float64, size(num_node,num_dim)
+            Co-ordinates of all field nodes.
+        C : Array of float64, size(3,3)
+            Stiffness tensor.
+        Strain_energy : Array of float64, size(num_elem,num_Gauss_2D)
+            Strain energy at the integration points for all elements.
+
+        Returns
+        -------
+        None.
+
+        """
+        self.num_elem = len(elements)
         self.num_Gauss_2D = num_Gauss_2D
         self.num_stress = num_stress
         self.num_node_elem = num_node_elem
@@ -19,52 +50,108 @@ class solve_stress_strain():
         self.Points = Points
         self.nodes = nodes
         self.C = C
-        self.Strain_energy = Strain_energy
+        self.strain_energy = strain_energy
         self.solve()
         
     def solve(self):
+        """
+        Function for solving stress, strain and strain energy at integration points for each element
+
+        Returns
+        -------
+        None.
+
+        """
         num_elem_var_u = self.num_node_elem*self.num_dof_u # total number of displacements per element 
+        
+        # Initialize stress component values at the integration points for all elements
         self.stress = np.zeros((self.num_elem,self.num_Gauss_2D,self.num_stress))
+        
+        # Initialize strain component values at the integration points for all elements
         self.strain = np.zeros((self.num_elem,self.num_Gauss_2D,self.num_stress))
+        
+        # Initialize strain energy at the integration points for all elements
         self.strain_energy_new = np.zeros((self.num_elem,self.num_Gauss_2D))
         
+        # Initialize element displacement vector
         elem_disp = np.zeros((self.num_elem,num_elem_var_u))
         
+        # Getting displacements belongs to respective elements
         for i in range(self.num_node_elem):
             elem_node = self.elements[:,i]
             for j in range(self.num_dof_u):
                 i_elem_var = i*self.num_dof_u + j
                 i_tot_var = (elem_node-1)*self.num_dof_u + j
                 elem_disp[:,i_elem_var] = self.disp[i_tot_var]
+        
+        # loop for all elements
         for elem in range(self.num_elem):
+            # Gettting co-ordinates of respective element
             elem_node_1 = self.elements[elem,:]
             elem_coord = self.nodes[elem_node_1-1,:]
+            
+            # loop for all Gauss points
             for j in range(self.num_Gauss_2D):
                 gpos = self.Points[j]
-                   
+                
+                # Calling shape function and its derivatives from shape function class
                 shape = shape_function(self.num_node_elem,gpos,elem_coord)
                 dNdX = shape.get_shape_function_derivative()
                 
                 # Compute B matrix
                 B = Bmatrix(dNdX,self.num_node_elem)
                 Bmat = B.Bmatrix_disp()
-                   
-                self.strain[elem,j,:] = np.matmul(Bmat,elem_disp[elem])#self.strain[elem,j,:] + np.matmul(Bmat,elem_disp[elem])
-                   
-                self.stress[elem,j,:] = np.matmul(self.C,self.strain[elem,j,:])#self.stress[elem,j,:] + np.matmul(self.C,self.strain[elem,j,:])
+                 
+                # Compute strain values at the integration points for all elements
+                self.strain[elem,j,:] = np.matmul(Bmat,elem_disp[elem])
                 
+                # Compute stress values at the integration points for all elements
+                self.stress[elem,j,:] = np.matmul(self.C,self.strain[elem,j,:])
+                
+                # Compute strain energy values at the integration points for all elements
                 self.strain_energy_new[elem,j] = 0.5*np.dot(self.stress[elem,j,:],self.strain[elem,j,:])
                 
-                if self.strain_energy_new[elem,j] > self.Strain_energy[elem,j]:
-                    self.Strain_energy[elem,j] = self.strain_energy_new[elem,j]
+                # Checks strain energy value with previous strain energy value and updates accordingly
+                if self.strain_energy_new[elem,j] > self.strain_energy[elem,j]:
+                    self.strain_energy[elem,j] = self.strain_energy_new[elem,j]
                 else:
-                    self.Strain_energy[elem,j] = self.Strain_energy[elem,j]
+                    self.strain_energy[elem,j] = self.strain_energy[elem,j]
+    
     @property
     def solve_stress(self):
+        """
+        Calls solve class and returns stress 
+
+        Returns
+        -------
+        Array of float64, size(num_elem,num_Gauss_2D,num_stress)
+            Stress at the integration points for all elements.
+
+        """
         return self.stress
+    
     @property
     def solve_strain(self):
+        """
+        Calls solve class and returns strain 
+
+        Returns
+        -------
+        Array of float64, size(num_elem,num_Gauss_2D,num_stress)
+            Strain at the integration points for all elements.
+
+        """
         return self.strain
+    
     @property
     def solve_strain_energy(self):
-        return self.Strain_energy
+        """
+        Calls solve class and returns strain energy 
+
+        Returns
+        -------
+        Array of float64, size(num_elem,num_Gauss_2D)
+            Strain energy at the integration points for all elements.
+
+        """
+        return self.strain_energy
