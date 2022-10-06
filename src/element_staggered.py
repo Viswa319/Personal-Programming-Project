@@ -71,7 +71,8 @@ class element_staggered():
             dNdX = shape.get_shape_function_derivative()
             det_Jacobian = shape.get_det_Jacobian()
             phi = np.matmul(N[0],elem_phi)
-
+            if phi > 1:
+                phi = 1 
             # Compute B matrix
             B = Bmatrix(dNdX,self.num_node_elem)
             Bmat = B.Bmatrix_disp()
@@ -178,7 +179,8 @@ class element_staggered():
             dNdX = shape.get_shape_function_derivative()
             det_Jacobian = shape.get_det_Jacobian()
             phi = np.matmul(N[0],elem_phi)
-            
+            if phi > 1:
+                phi = 1 
             # Compute B matrix
             B = Bmatrix(dNdX,self.num_node_elem)
             Bmat = B.Bmatrix_disp()
@@ -234,7 +236,8 @@ class element_staggered():
             dNdX = shape.get_shape_function_derivative()
             det_Jacobian = shape.get_det_Jacobian()
             phi = np.matmul(N[0],elem_phi)
-            
+            if phi > 1:
+                phi = 1 
             # Compute B matrix
             B = Bmatrix(dNdX,self.num_node_elem)
             Bmat = B.Bmatrix_phase_field()

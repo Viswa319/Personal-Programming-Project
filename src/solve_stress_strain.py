@@ -49,9 +49,9 @@ class solve_stress_strain():
                 B = Bmatrix(dNdX,self.num_node_elem)
                 Bmat = B.Bmatrix_disp()
                    
-                self.strain[elem,j,:] = self.strain[elem,j,:] + np.matmul(Bmat,elem_disp[elem])
+                self.strain[elem,j,:] = np.matmul(Bmat,elem_disp[elem])#self.strain[elem,j,:] + np.matmul(Bmat,elem_disp[elem])
                    
-                self.stress[elem,j,:] = self.stress[elem,j,:] + np.matmul(self.C,self.strain[elem,j,:])
+                self.stress[elem,j,:] = np.matmul(self.C,self.strain[elem,j,:])#self.stress[elem,j,:] + np.matmul(self.C,self.strain[elem,j,:])
                 
                 self.strain_energy_new[elem,j] = 0.5*np.dot(self.stress[elem,j,:],self.strain[elem,j,:])
                 

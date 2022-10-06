@@ -224,7 +224,18 @@ def test_element_area_true():
     actual_area_3 = 4*det_Jacobian_3
     expected_area_3 = 16
     assert(array_equiv(actual_area_3,expected_area_3)) is True
-    
+
+def test_assembly_index_true():
+    for elem in range(0,num_elem):
+        elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+        K_uu = elem_stiff.element_stiffness_displacement(C,k_const)
+        assemble = assembly()
+        
+        index_u = assemble.assembly_index_u(elem,num_dof_u,num_node_elem,elements)
+        
+        X,Y = np.meshgrid(index_u,index_u,sparse=True)
+        global_K_disp[X,Y] =  global_K_disp[X,Y] + K_uu
+        del X,Y
 test_plane_stress_true()
 test_plane_strain_true()
 test_quadrature_coefficients_true()
@@ -233,3 +244,4 @@ test_B_matrix_true()
 test_shape_function_derivative_true()
 test_Jacobian_true()
 test_element_area_true()
+test_assembly_index_true()

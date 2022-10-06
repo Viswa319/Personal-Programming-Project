@@ -91,6 +91,7 @@ fixed_dof[bot*2] = 1
 
 disp_plot = []
 force_plot = []
+fig,ax = plt.subplots()
 # step = 0
 # while tot_inc <= 0.01:
 for step in range(num_step):
@@ -117,30 +118,23 @@ for step in range(num_step):
     # Initialization of global force vector and global stiffness matrix for phase field parameter
     global_force_phi = np.zeros(num_tot_var_phi)
     global_K_phi = np.zeros((num_tot_var_phi, num_tot_var_phi))
-         
+    global_force_phi_tol = np.zeros(num_tot_var_phi)
     for elem in range(num_elem):
         elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
         K_phiphi = elem_stiff.element_stiffness_field_parameter(G_c,l_0)
-            
+        residual_elem_phi = elem_stiff.element_residual_field_parameter(G_c,l_0)
         assemble = assembly()
         
         index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_phi,num_node_elem,elements)
         
         X,Y = np.meshgrid(index_phi,index_phi,sparse=True)
         global_K_phi[X,Y] =  global_K_phi[X,Y] + K_phiphi
+        global_force_phi[index_phi] = global_force_phi[index_phi]+residual_elem_phi
         del X,Y
     for iteration in range(max_iter):
         sp_global_K_phi = csc_matrix(global_K_phi)
-        phi_solve = spsolve(sp_global_K_phi,-global_force_phi)
-        
-        phi = phi_solve
-        
-        for i in range(num_tot_var_phi):
-            if phi[i] > 1:
-                phi[i] = 1 
-            if phi[i] < 1:
-                phi[i] = 0
-        
+        delta_phi = spsolve(sp_global_K_phi,-global_force_phi)
+        phi = phi + delta_phi
         for elem in range(num_elem):
             elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
             residual_elem_phi = elem_stiff.element_residual_field_parameter(G_c,l_0)
@@ -148,13 +142,18 @@ for step in range(num_step):
             
             index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_phi,num_node_elem,elements)
 
-            global_force_phi[index_phi] = global_force_phi[index_phi]+residual_elem_phi
-        tolerance = np.linalg.norm(global_force_phi)
-        print("Solving for phase field: Iteration ---> {} --- tolerance = {}".format(iteration+1, tolerance))
+            global_force_phi_tol[index_phi] = global_force_phi_tol[index_phi]+residual_elem_phi
+        tolerance = np.linalg.norm(global_force_phi_tol)
+        print("Solving for phase field: Iteration ---> {} --- norm_1 = {}".format(iteration+1, np.linalg.norm(global_force_phi_tol)))
+        # if (np.linalg.norm(delta_phi) < max((10**-5)*np.linalg.norm(phi),10**-8)):
+        #     print("Phase field solution converged!")
+        #     break 
+        # if (np.linalg.norm(global_force_phi) < 0.005*max(np.linalg.norm(global_force_phi_tol),10**-8)):
+        #     print("Displacement solution converged!")
+        #     break 
         if (tolerance < max_tol):
             print("Phase field solution converged!")
             break 
-
         if (iteration == max_iter-1):
             print("Phase field solution has achieved its maximum number of iterations and failed to converge.!")
             max_iteration_reached = True
@@ -186,7 +185,7 @@ for step in range(num_step):
         sp_global_K_disp = csc_matrix(global_K_disp)
         disp_reduced = spsolve(sp_global_K_disp,-global_force_disp)
         
-        disp = disp_reduced
+        disp = disp + disp_reduced
         
         get_stress = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,strain_energy)
         strain = get_stress.solve_strain
@@ -211,7 +210,7 @@ for step in range(num_step):
         #     print("Displacement solution converged!")
         #     break 
         
-        if (np.linalg.norm(global_force_disp) < 0.005*np.linalg.norm(F_int)):
+        if (np.linalg.norm(global_force_disp) < 0.005*max(np.linalg.norm(F_int),10**-8)):
             print("Displacement solution converged!")
             break 
         if (iteration == max_iter-1):
@@ -226,6 +225,8 @@ for step in range(num_step):
     
     disp_plot.append(tot_inc)
     force_plot.append(sum(F_int[(bot*2)+1]))
+    if (step+1)%10 == 0:
+        plt.tricontourf(nodes[:,0], nodes[:,1], phi)
 end_time = time.time()
 print('total time:',end_time-start_time)
 plt.plot(disp_plot,force_plot)

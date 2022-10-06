@@ -110,19 +110,13 @@ Poisson = 0.3
 # Inputs for time integration parameters
 
 # number of time steps
-num_step = 10000
-
-# print frequency to output the results to file
-num_print = 25
-
-# time increment for numerical integration
-delta_time = 1.0
+num_step = 1000
 
 # maximum number of Newton-Raphson iterations
 max_iter = 5
 
 # tolerance for iterative solution
-max_tol = 5e-3
+max_tol = 0.005
 
 # displacmenet increment per time steps
-disp_inc = 1e-6 # mm
+disp_inc = 1e-5 # mm
