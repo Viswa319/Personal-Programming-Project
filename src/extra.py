@@ -8,7 +8,7 @@
 #         point.
 #     num_node_elem : int
 #         number of nodes per element, possible nodes are 2,3,4 and 8 per element.
-    
+
 #     Returns
 #     -------
 #     N : array of float64
@@ -17,18 +17,18 @@
 #         gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
 #     """
 #     if num_node_elem == 2:
-#         ########### two node line element ########## 
-#         #  
+#         ########### two node line element ##########
+#         #
 #         #    1---------2
 #         #
 #         # Shape functions
-#         N = np.array([(1+point)/2,(1-point)/2])[np.newaxis] 
-        
+#         N = np.array([(1+point)/2,(1-point)/2])[np.newaxis]
+
 #         # derivatives of shape functions w.r.t psi
 #         dNdxi = np.array([1/2,-1/2])[np.newaxis]
 #     elif num_node_elem == 3:
-#         ########### three node triangular element ########## 
-#         #  
+#         ########### three node triangular element ##########
+#         #
 #         #    1---------2
 #         #     \       /
 #         #      \     /
@@ -39,17 +39,17 @@
 #         # Shape functions
 #         eta = point[1]
 #         psi = point[0]
-#         N = np.array([1-psi-eta,psi,eta])[np.newaxis] 
-        
+#         N = np.array([1-psi-eta,psi,eta])[np.newaxis]
+
 #         # derivatives of shape functions w.r.t psi and eta respectively
 #         dNdpsi = np.array([-1, 1, 0])[np.newaxis]
 #         dNdeta = np.array([-1, 0, 1])[np.newaxis]
 #         dNdxi = np.r_[dNdpsi,dNdeta]
 #     elif num_node_elem == 4:
-#         ########### four node quadrilateral element ########## 
-#         #  
+#         ########### four node quadrilateral element ##########
+#         #
 #         #    4---------3
-#         #    |         | 
+#         #    |         |
 #         #    |         |
 #         #    |         |
 #         #    1---------2
@@ -57,18 +57,18 @@
 #         eta = point[1]
 #         psi = point[0]
 #         N = 0.25*np.array([(1-psi)*(1-eta), (1+psi)*(1-eta), (1+psi)*(1+eta), (1-psi)*(1+eta)])[np.newaxis]
-    
+
 #         # derivatives of shape functions w.r.t psi and eta respectively
 #         dNdpsi = 0.25*np.array([-(1-eta), (1-eta), (1+eta), -(1+eta)])[np.newaxis]
 #         dNdeta = 0.25*np.array([-(1-psi), -(1+psi), (1+psi), (1-psi)])[np.newaxis]
 #         dNdxi = np.r_[dNdpsi,dNdeta]
 #     elif num_node_elem == 8:
-#         ########### eight node quadrilateral element ########## 
+#         ########### eight node quadrilateral element ##########
 #         #
 #         #    7-----6-----5
-#         #    |           | 
 #         #    |           |
-#         #    8           4 
+#         #    |           |
+#         #    8           4
 #         #    |           |
 #         #    |           |
 #         #    1-----2-----3
@@ -76,7 +76,7 @@
 #         eta = point[1]
 #         psi = point[0]
 #         N = np.array([-1*0.25*(1-psi)*(1-eta)*(1+psi+eta), 0.5*(1-psi)*(1-eta)*(1+psi), -1*0.25*(1+psi)*(1-eta)*(1-psi+eta), 0.5*(1+psi)*(1-eta)*(1+eta), -1*0.25*(1+psi)*(1+eta)*(1-psi-eta), 0.5*(1+psi)*(1+eta)*(1-psi),-1*0.25*(1-psi)*(1+eta)*(1+psi-eta), 0.5*(1-psi)*(1+eta)*(1-eta)])[np.newaxis]
-        
+
 #         # derivatives of shape functions w.r.t psi and eta respectively
 #         dNdpsi = np.array([0.25*(1-eta)*(2*psi+eta), -psi*(1-eta), 0.25*(1-eta)*(2*psi-eta), 0.5*(1-eta)*(1+eta), 0.25*(1+eta)*(2*psi+eta),-psi*(1+eta),0.25*(1+eta)*(2*psi-eta),-0.5*(1-eta)*(1+eta)])[np.newaxis]
 #         dNdeta = np.array([0.25*(1-psi)*(psi+2*eta), -0.5*(1-psi)*(1+psi), 0.25*(1+psi)*(-psi+2*eta), -eta*(1+psi), 0.25*(1+psi)*(psi+2*eta),0.5*(1-psi)*(1+psi),0.25*(1-psi)*(-psi+2*eta),-eta*(1-psi)])[np.newaxis]
@@ -87,7 +87,7 @@
 
  # elem_phi = np.zeros(num_node_elem)
         # elem_phi_dot = np.zeros(num_node_elem)
-        
+
         # # coordinates of nodes which belongs to particular element
         # elem_coord = np.zeros((num_node_elem,num_dim))
         # for i in range(0,num_node_elem):
@@ -95,7 +95,7 @@
         #     i_tot_var = num_tot_var_u + elem_node
         #     elem_phi[i] = disp[i_tot_var-1]
         #     elem_phi_dot[i] = disp[i_tot_var-1] - disp_old[i_tot_var-1]
-    
+
         #     for j in range(0,num_dim):
         #         elem_coord[i,j] = nodes[elem_node-1,j]
 
@@ -108,7 +108,7 @@
 # for innode in range(0,num_node_elem):
 #                 for jnnode in range(0,num_node_elem):
             #         K_phiphi_2[innode,jnnode] = K_phiphi_2[innode,jnnode] + (((G_c/l_0)+2*strain_energy)+(neta/delta_time)*phi_func)*N[0,innode]*N[0,jnnode]*Weights[j]*det_Jacobian
-            
+
     # num_fixnodes = len(fixnodes)
     # num_tot_var = len(disp)
     # external_force = np.zeros((num_fixnodes,num_dof_u))
@@ -118,41 +118,41 @@
     #         if fixdof[i,j] == 1:
     #             itotv = ((lnode-1)*num_dof_u+j)
     #             external_force[i,j] = external_force[i,j]-np.dot(global_K[itotv,:],disp[0:num_tot_var])
-                
+
     #             global_K[itotv,:] = 0.0
-                
+
     #             global_K[itotv,itotv] = 1.0
-                
+
     #             global_force[itotv] = disp_bc[i,j]*tot_inc-disp[itotv]
-    
-    
+
+
 # num_dof_u = num_dof-1
-    
+
 #     # the number of DOFs for order parameters per node
 #     num_dof_phi = num_dof-2
-        
+
 #     # total number of variables for displacements
 #     num_tot_var_u = num_node*num_dof_u
-        
-#     # total number of displacements per element 
+
+#     # total number of displacements per element
 #     num_elem_var_u = num_node_elem*num_dof_u
-        
-#     # total number of order parameters per element 
+
+#     # total number of order parameters per element
 #     num_elem_var_phi = num_node_elem*num_dof_phi
 #     K_uu_1 = np.zeros((num_elem,num_elem_var_u,num_elem_var_u))
 #     K_uphi_1 = np.zeros((num_elem,num_elem_var_u,num_elem_var_phi))
 #     K_phiu_1 = np.zeros((num_elem,num_elem_var_phi,num_elem_var_u))
 #     K_phiphi_1 = np.zeros((num_elem,num_elem_var_phi,num_elem_var_phi))
-    
+
 #     elem_phi_1 = np.zeros((num_elem,num_node_elem))
 #     elem_phi_dot_1 = np.zeros((num_elem,num_node_elem))
-    
+
 #     for i in range(0,num_node_elem):
 #         elem_node_1 = elements[:,i]
 #         i_tot_var = num_tot_var_u + elem_node_1
 #         elem_phi_1[:,i] = disp[i_tot_var-1]
 #         elem_phi_dot_1[:,i] = disp[i_tot_var-1] - disp_old[i_tot_var-1]
-        
+
 #     Weights_1 = []
 #     det_Jacobian_1 = []
 #     Bmat_u = np.zeros((num_elem,num_stress,num_elem_var_u))
@@ -160,23 +160,23 @@
 #     dVol = np.zeros((num_elem,num_Gauss**num_dim))
 #     for elem in range(0,num_elem):
 #         # K_uu,K_uphi,K_phiu,K_phiphi = element_stiffness(num_node,elem,num_node_elem,num_dim,num_dof,elements,nodes,num_Gauss,Points,Weights,C,disp,disp_old,stress,strain)
-        
-#         # Initialize element stiffness matrices    
+
+#         # Initialize element stiffness matrices
 #         K_uu = np.zeros((num_elem_var_u,num_elem_var_u))
 #         K_uphi = np.zeros((num_elem_var_u,num_elem_var_phi))
 #         K_phiu = np.zeros((num_elem_var_phi,num_elem_var_u))
 #         K_phiphi = np.zeros((num_elem_var_phi,num_elem_var_phi))
-        
-        
+
+
 #         elem_node = elements[elem,:]
 #         i_tot_var = num_tot_var_u + elem_node
 #         elem_phi = disp[i_tot_var-1]
 #         elem_phi_dot = disp[i_tot_var-1] - disp_old[i_tot_var-1]
-    
+
 #         elem_coord = nodes[elem_node-1,:]
 #         for j in range(0,num_Gauss**num_dim):
 #             gpos = Points[j]
-            
+
 #             shapefunction = shape_function()
 #             if num_node_elem == 2:
 #                 N,dNdxi = shapefunction.two_node_line_element(gpos)
@@ -186,48 +186,48 @@
 #                 N,dNdxi = shapefunction.four_node_quadrilateral_element(gpos)
 #             elif num_node_elem == 8:
 #                 N,dNdxi = shapefunction.eight_node_quadrilateral_element(gpos)
-                
+
 #             Jacobian = np.matmul(dNdxi,elem_coord)
 #             det_Jacobian = np.linalg.det(Jacobian)
 #             if det_Jacobian <= 0:
 #                 raise ValueError('Solution is terminated since, determinant of Jacobian is either zero or negative.')
-               
+
 #             Jacobian_inv = np.linalg.inv(Jacobian)
 #             dNdX = np.matmul(Jacobian_inv,dNdxi)
-            
+
 #             phi_1 = np.matmul(elem_phi_1,N[0])
 #             phi_dot_1 = np.matmul(elem_phi_dot_1,N[0])
 #             phi = np.matmul(elem_phi,N[0])
 #             phi_dot = np.matmul(elem_phi_dot,N[0])
-            
+
 #             dVol[elem,j] = det_Jacobian*Weights[j]
 #             phi_func = 0
 #             if phi_dot < 0:
 #                 phi_func = -phi_dot
-            
+
 #             Weights_1.append(Weights[j])
 #             det_Jacobian_1.append(det_Jacobian)
 #             # Compute B matrix
 #             B = Bmatrix()
 #             Bmat = B.Bmatrix_linear(dNdX,num_node_elem)
 #             Bmat_u[elem,:,:] = Bmat[:,:]
-            
+
 #             K_uu_1[elem] = K_uu_1[elem] + np.matmul(np.matmul(np.transpose(Bmat),C),Bmat)*(((1-phi)**2)+k_const)*Weights[j]*det_Jacobian
-            
+
 #             K_uu = K_uu + np.matmul(np.matmul(np.transpose(Bmat),C),Bmat)*(((1-phi)**2)+k_const)*Weights[j]*det_Jacobian
-            
+
 #             K_uphi_1[elem] = K_uphi_1[elem] -2*(1-phi)*np.matmul(np.transpose(Bmat),np.transpose(stress[elem]))*N[0,j]*Weights[j]*det_Jacobian
 #             K_uphi = K_uphi -2*(1-phi)*np.matmul(np.transpose(Bmat),np.transpose(stress[elem]))*N[0,j]*Weights[j]*det_Jacobian
-            
+
 #             K_phiu = K_phiu -2*(1-phi)*np.matmul(stress[elem],Bmat)*N[0,j]*Weights[j]*det_Jacobian
 #             K_phiu_1[elem] = K_phiu_1[elem] -2*(1-phi)*np.matmul(stress[elem],Bmat)*N[0,j]*Weights[j]*det_Jacobian
 #             strain_energy = 0.5*np.dot(stress[elem,j,:],strain[elem,j,:])
 #             K_phiphi = K_phiphi + G_c*l_0*np.matmul(np.transpose(dNdX),dNdX)*Weights[j]*det_Jacobian
-            
+
 #             K_phiphi = K_phiphi + (((G_c/l_0)+2*strain_energy)+(neta/delta_time)*phi_func)*np.matmul(np.transpose([N[0]]),np.transpose(np.transpose([N[0]])))*Weights[j]*det_Jacobian
-            
+
 #             K_phiphi_1[elem] = K_phiphi_1[elem] + G_c*l_0*np.matmul(np.transpose(dNdX),dNdX)*Weights[j]*det_Jacobian
-            
+
 #             K_phiphi_1[elem] = K_phiphi_1[elem] + (((G_c/l_0)+2*strain_energy)+(neta/delta_time)*phi_func)*np.matmul(np.transpose([N[0]]),np.transpose(np.transpose([N[0]])))*Weights[j]*det_Jacobian
 #             if np.array_equiv(np.round(K_uu,6),np.round(K_uu_1[elem],6)) is False:
 #                 print('hey1')
@@ -310,16 +310,129 @@
 #     return global_K,global_force
 
             # self.strain_energy_new[self.elem,j] = 0.5*np.dot(self.stress[self.elem,j,:],self.strain[self.elem,j,:])
-            
+
             # if self.strain_energy_new[self.elem,j] > self.strain_energy[self.elem,j]:
             #     H = self.strain_energy_new[self.elem,j]
             # else:
             #     H = self.strain_energy[self.elem,j]
-            
+
 # k = 0
         # for i in range(num_tot_var_u):
-        #     if fixed_dof[i] != 1: 
+        #     if fixed_dof[i] != 1:
         #         disp[i] = disp_reduced[k]
         #         k = k+1
         #     if fixed_dof[i] == 1:
         #         disp[i] = disp_bc[i]
+
+# step = 0
+# while tot_inc <= 0.01:
+    # step = step+1
+    # if tot_inc <= 0.005:
+    #     disp_inc = 1e-5
+    # else:
+    #     disp_inc = 1e-6
+
+# if (np.linalg.norm(delta_phi) < max((10**-5)*np.linalg.norm(phi),10**-8)):
+        #     print("Phase field solution converged!")
+        #     break
+        # if (np.linalg.norm(global_force_phi) < 0.005*max(np.linalg.norm(global_force_phi_tol),10**-8)):
+        #     print("Displacement solution converged!")
+        #     break
+
+# Initialization of global force vector and global stiffness matrix for  displacement
+    # global_force_disp = np.zeros(num_tot_var_u)
+    # global_K_disp = np.zeros((num_tot_var_u, num_tot_var_u))
+
+# for elem in range(0,num_elem):
+    #     elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+    #     K_uu = elem_stiff.element_stiffness_displacement(C,k_const)
+    #     assemble = assembly()
+
+    #     index_u = assemble.assembly_index_u(elem,num_dof_u,num_node_elem,elements)
+
+    #     X,Y = np.meshgrid(index_u,index_u,sparse=True)
+    #     global_K_disp[X,Y] =  global_K_disp[X,Y] + K_uu
+    #     del X,Y
+
+# for elem in range(0,num_elem):
+        #     elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+        #     F_int_elem = elem_stiff.element_internal_force(k_const)
+
+        #     assemble = assembly()
+
+        #     index_u = assemble.assembly_index_u(elem,num_dof_u,num_node_elem,elements)
+
+        #     F_int[index_u] = F_int[index_u]+F_int_elem
+
+# for elem in range(num_elem):
+    #     elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+    #     K_phiphi = elem_stiff.element_stiffness_field_parameter(G_c,l_0)
+    #     residual_elem_phi = elem_stiff.element_residual_field_parameter(G_c,l_0)
+    #     assemble = assembly()
+
+    #     index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_phi,num_node_elem,elements)
+
+    #     X,Y = np.meshgrid(index_phi,index_phi,sparse=True)
+    #     global_K_phi[X,Y] =  global_K_phi[X,Y] + K_phiphi
+    #     global_force_phi[index_phi] = global_force_phi[index_phi]+residual_elem_phi
+    #     del X,Y
+
+# Initialization of global force vector and global stiffness matrix for phase field parameter
+    # global_force_phi = np.zeros(num_tot_var_phi)
+    # global_K_phi = np.zeros((num_tot_var_phi, num_tot_var_phi))
+    # global_force_phi_tol = np.zeros(num_tot_var_phi)
+
+# for elem in range(num_elem):
+        #     elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+        #     residual_elem_phi = elem_stiff.element_residual_field_parameter(G_c,l_0)
+        #     assemble = assembly()
+
+        #     index_phi = assemble.assembly_index_phi(elem,num_dof_phi,num_tot_var_phi,num_node_elem,elements)
+
+        #     global_force_phi_tol[index_phi] = global_force_phi_tol[index_phi]+residual_elem_phi
+
+# def boundary_condition(num_dof_u,fixed_dof,global_K,global_force,disp,disp_bc):
+#     num_tot_var = len(disp)
+#     num_fixed_dof = len(np.where(fixed_dof != 0)[0])
+#     global_K_reduced = np.zeros((num_tot_var-num_fixed_dof,num_tot_var-num_fixed_dof))
+#     global_force_reduced = np.zeros(num_tot_var-num_fixed_dof)
+#     k = 0
+#     for i in range(num_tot_var):
+#         l = 0
+#         if fixed_dof[i] != 1:
+#             for j in range(num_tot_var):
+#                 if fixed_dof[j] != 1:
+#                     global_K_reduced[k,l] = global_K[i,j]
+#                     l = l+1
+#             global_force_reduced[k] = global_force[i]
+#             k = k+1
+#     return global_K_reduced,global_force_reduced
+
+# def boundary_condition(num_dof_u,nodes_bc,fixed_dof,global_K,global_force,disp,disp_bc,tot_inc):
+#     num_fixnodes = len(nodes_bc)
+#     num_tot_var = len(disp)
+#     external_force = np.zeros((num_fixnodes,num_dof_u))
+#     for i in range(0,num_fixnodes):
+#         lnode = nodes_bc[i]
+#         for j in range(0,num_dof_u):
+#             if fixed_dof[i,j] == 1:
+#                 itotv = ((lnode-1)*num_dof_u+j)
+#                 external_force[i,j] = external_force[i,j]-np.dot(global_K[itotv,:],disp[0:num_tot_var])
+
+#                 global_K[itotv,:] = 0.0
+#                 global_K[itotv,itotv] = 1.0
+
+#                 global_force[itotv] = disp_bc[i,j]*tot_inc-disp[itotv]
+#     return global_K,global_force,external_force
+
+# if np.mod(step,num_print-1) == 0:
+    #     deflection = np.zeros((num_node,num_dim))
+    #     order_parameter = np.zeros(num_node)
+    #     for i in range(0,num_node):
+    #         for j in range(0,num_dof_u):
+    #             itotv = i*num_dof+j
+    #             deflection[i,j] = nodes[i,j]+10*disp[itotv]
+    #             jtotv = num_tot_var_u+i
+    #             order_parameter[i] = disp[jtotv]
+    #     file_name = 'time_{}.vtk'.format(step)
+    #     vtk_generator(file_name,deflection,order_parameter)

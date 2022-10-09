@@ -33,7 +33,7 @@ def test_plane_stress_true():
 def test_plane_strain_true():
     '''
     UNIT TESTING
-    Aim: Test plane stress stiffness tensor from planestrain method in material_routine class
+    Aim: Test plane strain stiffness tensor from planestrain method in material_routine class
 
     Expected result : Array of stiffness tensor
 
@@ -53,7 +53,7 @@ def test_quadrature_coefficients_true():
     UNIT TESTING
     Aim: Test quadrature points and weights which is calculated using quadrature_coefficients in geometry
 
-    Expected result : Array of Guass points and Jacobian for each cell
+    Expected result : Array of Guass points and weights
 
     Test command : pytest test.py::test_quadrature_coefficients_true()
 
@@ -91,7 +91,7 @@ def test_shape_function_true():
     UNIT TESTING
     Aim: Test shape functions in shape_function class
 
-    Expected result : Array of Guass points and Jacobian for each cell
+    Expected result : Array of a shape function
 
     Test command : pytest test.py::test_shape_function_true()
 
@@ -112,7 +112,7 @@ def test_B_matrix_true():
     UNIT TESTING
     Aim: Test B matrix which is the strain displacement connectivity matrix in Bmatrix class
 
-    Expected result : Array of Guass points and Jacobian for each cell
+    Expected result : Array of B matrix
 
     Test command : pytest test.py::test_B_matrix_true()
 
@@ -141,7 +141,7 @@ def test_shape_function_derivative_true():
     UNIT TESTING
     Aim: Test shape function derivatives in shape_function class
 
-    Expected result : Array of Guass points and Jacobian for each cell
+    Expected result : Array of shape function derivatives
 
     Test command : pytest test.py::test_shape_function_derivative_true()
 
@@ -166,7 +166,7 @@ def test_Jacobian_true():
     UNIT TESTING
     Aim: Test determinant of Jacobian in shape_function class
 
-    Expected result : Array of Guass points and Jacobian for each cell
+    Expected result : Determinant of a Jacobian matrix
 
     Test command : pytest test.py::test_Jacobian_true()
 
@@ -189,7 +189,7 @@ def test_element_area_true():
     UNIT TESTING
     Aim: Test area of an element using determinant of Jacobian
 
-    Expected result : Array of Guass points and Jacobian for each cell
+    Expected result : Area of an element
 
     Test command : pytest test.py::test_element_area_true()
 
@@ -226,6 +226,16 @@ def test_element_area_true():
     assert(array_equiv(actual_area_3,expected_area_3)) is True
 
 def test_assembly_index_true():
+    '''
+    UNIT TESTING
+    Aim: Test area of an element using determinant of Jacobian
+
+    Expected result : Area of an element
+
+    Test command : pytest test.py::test_element_area_true()
+
+    Remarks : test case passed successfully
+    '''
     for elem in range(0,num_elem):
         elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
         K_uu = elem_stiff.element_stiffness_displacement(C,k_const)

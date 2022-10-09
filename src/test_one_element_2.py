@@ -82,9 +82,8 @@ top = np.where(nodes[:,1] == max(nodes[:,1]))[0] # top edge nodes
 # If boundary condition is prescribed at certain node, then it is given value 1 or else 0
 fixed_dof = np.zeros(num_tot_var_u)
 fixed_dof[(top*2)+1] = 1
-fixed_dof[(top*2)] = 1
+fixed_dof[(left*2)] = 1
 fixed_dof[(bot*2)+1] = 1
-fixed_dof[bot*2] = 1
 
 # Initialization of global force vector and global stiffness matrix for  displacement
 global_force_disp = np.zeros(num_tot_var_u)

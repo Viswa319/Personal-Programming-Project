@@ -16,7 +16,8 @@ from solve_stress_strain import solve_stress_strain
 from input_parameters import *
 from residual import residual
 import time
-from vtk_generator import vtk_generator
+from plots import *
+# from vtk_generator import vtk_generator
 
 start_time = time.time()
 # total number of variables in the solution
@@ -72,6 +73,12 @@ elif stressState == 2: # Plane strain
 # total increment factor for displacement increments
 tot_inc = 0
 
+bot = np.where(nodes[:, 1] == min(nodes[:, 1]))[0]  # bottom edge nodes
+
+# Create an empty list for storing displacement increment and load values
+# which are used for generating plots
+disp_plot = []
+force_plot = []
 for step in range(0,num_step):
     step_time_start = time.time()
     tot_inc = tot_inc + disp_inc
@@ -105,7 +112,7 @@ for step in range(0,num_step):
     end_assembly_time = time.time()
     
     for iteration in range(0,max_iter):
-        global_K,global_force,external_force = boundary_condition(num_dof_u,nodes_bc,fixed_dof,global_K,global_force,disp,disp_bc,tot_inc)
+        global_K,global_force,reaction_force = boundary_condition(num_dof_u,nodes_bc,fixed_dof,global_K,global_force,disp,disp_bc,tot_inc)
         start_solve_time = time.time()
         
         sp_global_K = csc_matrix(global_K)
@@ -120,7 +127,7 @@ for step in range(0,num_step):
             if disp[i] < 0:
                 disp[i] = 0
         
-        get_stress = solve_stress_strain(num_elem,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,strain_energy)
+        get_stress = solve_stress_strain(num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,strain_energy)
         strain = get_stress.solve_strain
         stress = get_stress.solve_stress
         
@@ -133,17 +140,22 @@ for step in range(0,num_step):
     print('assembly time:',end_assembly_time-start_assembly_time)
     print('solve time:',end_solve_time-start_solve_time)
     
-    if np.mod(step,num_print-1) == 0:
-        deflection = np.zeros((num_node,num_dim))
-        order_parameter = np.zeros(num_node)
-        for i in range(0,num_node):
-            for j in range(0,num_dof_u):
-                itotv = i*num_dof+j
-                deflection[i,j] = nodes[i,j]+10*disp[itotv]
-                jtotv = num_tot_var_u+i
-                order_parameter[i] = disp[jtotv]
-        file_name = 'time_{}.vtk'.format(step)
-        vtk_generator(file_name,deflection,order_parameter)
-    
+    # storing displacement increment and load values which are used for generating plots
+    disp_plot.append(tot_inc)
+    force_plot.append(-sum(global_force[(bot * 2 + 1)]))
+    # if np.mod(step,num_print-1) == 0:
+    #     deflection = np.zeros((num_node,num_dim))
+    #     order_parameter = np.zeros(num_node)
+    #     for i in range(0,num_node):
+    #         for j in range(0,num_dof_u):
+    #             itotv = i*num_dof+j
+    #             deflection[i,j] = nodes[i,j]+10*disp[itotv]
+    #             jtotv = num_tot_var_u+i
+    #             order_parameter[i] = disp[jtotv]
+    #     file_name = 'time_{}.vtk'.format(step)
+    #     vtk_generator(file_name,deflection,order_parameter)
+    if (step + 1) % 100 == 0:
+        plot_field_parameter_mono(nodes, phi, tot_inc)
 end_time = time.time()
 print('total time:',end_time-start_time)
+plot_load_displacement_mono(disp_plot, force_plot)

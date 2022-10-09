@@ -15,10 +15,10 @@ def quadrature_coefficients(numgauss):
 
     Returns
     -------
-    Points : array of float64
-        Gaussian quadrature points.
-    Weights : array of float64
-        weights for respective points.
+    Points : Array of float64, size(num_dim,num_Gauss**num_dim)
+            Gauss points used for integration.
+    Weights : Array of float64, size(num_Gauss**num_dim)
+            Weights for Gauss points used for integration.
 
     """
     import numpy.polynomial.legendre as ptwt
