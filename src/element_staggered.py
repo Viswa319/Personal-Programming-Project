@@ -7,9 +7,15 @@
 import numpy as np
 from shape_function import shape_function
 from Bmatrix import Bmatrix
-
+from material_routine import material_routine
 
 class element_staggered():
+    """Class to compute element stiffness tensor for displacments and phase field order parameter,
+                        element residual for phase field order parameter,
+                        element internal force for displacements.
+       
+        This element routine is computed based on staggered scheme.                 
+    """
     def __init__(self, elem, Points, Weights, disp, Phi, stress, strain_energy, elements, nodes, num_dof, num_node_elem, num_Gauss_2D):
         """
         Class to compute element stiffness tensor for displacments and phase field order parameter
@@ -65,9 +71,10 @@ class element_staggered():
         self.num_node_elem = num_node_elem
         self.num_Gauss_2D = num_Gauss_2D
 
-    def element_stiffness_displacement(self, C, k_const):
+    def element_stiffness_displacement(self, C:np.array, k_const:float):
         """
-        Function for calculating element stiffness matrix for displacement.
+        Function for calculating element stiffness matrix and internal force vector 
+        for displacement for elastic case.
 
         Parameters
         ----------
@@ -80,7 +87,10 @@ class element_staggered():
         -------
         K_uu : Array of float64, size(num_elem_var_u,num_elem_var_u)
             element stiffness matrix.
-
+        
+        F_int_elem : Array of float64, size(num_elem_var_u)
+            element internal force vector.
+        
         """
         num_dof_u = self.num_dof - 1
 
@@ -118,7 +128,7 @@ class element_staggered():
             # Compute element stiffness matrix
             K_uu = K_uu + np.matmul(np.matmul(np.transpose(Bmat), C), Bmat) * (((1 - phi) ** 2) + k_const) \
                 * self.Weights[j] * det_Jacobian
-
+            
             # Compute internal force vector for an element
             F_int_elem = F_int_elem + np.matmul(np.transpose(Bmat), self.stress[self.elem, j, :]) * (((1 - phi) ** 2) + k_const) \
                 * self.Weights[j] * det_Jacobian
@@ -126,7 +136,8 @@ class element_staggered():
 
     def element_stiffness_field_parameter(self, G_c, l_0):
         """
-        Function for calculating element stiffness matrix for phase field order parameter (phi)
+        Function for calculating element stiffness matrix and residual vector 
+        for phase field order parameter (phi).
 
         Parameters
         ----------
@@ -138,8 +149,11 @@ class element_staggered():
         Returns
         -------
         K_phiphi : Array of float64, size(num_elem_var_phi,num_elem_var_phi)
-            element stiffness matrix for phase field order parameter.
-
+            element stiffness matrix for phase-field order parameter.
+        
+        residual_phi : Array of float64, size(num_elem_var_phi)
+            element residual vector for phase-field order parameter.
+            
         """
 
         # the number of DOFs for order parameters per node
@@ -191,61 +205,9 @@ class element_staggered():
 
         return K_phiphi, residual_phi
     
-    def element_internal_force(self,k_const):
-        """
-        Function for computing internal force vector for an element
-        
-        Parameters
-        ----------
-        k_const : float64
-            parameter to avoid overflow for cracked elements.
-
-        Returns
-        -------
-        F_int_elem : Array of float64, size(num_elem_var_u)
-            internal force vector for an element.
-
-        """
-        num_dof_u = self.num_dof-1
-        
-        # total number of displacements per element 
-        num_elem_var_u = self.num_node_elem*num_dof_u
-        
-        # Initialize element internal force vector   
-        F_int_elem = np.zeros(num_elem_var_u)
-        
-        i_tot_var = self.elem_node
-        elem_phi = self.Phi[i_tot_var-1]
-        
-
-        for j in range(0,self.num_Gauss_2D):
-            gpos = self.Points[j]
-            
-            # Calling shape function and its derivatives from shape function class
-            shape = shape_function(self.num_node_elem,gpos,self.elem_coord)
-            N = shape.get_shape_function()
-            dNdX = shape.get_shape_function_derivative()
-            # Call detereminant of Jacobian
-            det_Jacobian = shape.get_det_Jacobian()
-            
-            # phase field order parameter
-            phi = np.matmul(N[0],elem_phi)
-            if phi > 1:
-                phi = 1 
-            
-            # Compute B matrix
-            B = Bmatrix(dNdX,self.num_node_elem)
-            Bmat = B.Bmatrix_disp()
-            
-            # Compute internal force vector for an element
-            F_int_elem = F_int_elem + np.matmul(np.transpose(Bmat),self.stress[self.elem,j,:])*(((1-phi)**2)+k_const) \
-                *self.Weights[j]*det_Jacobian
-            
-        return F_int_elem
-    
     def element_residual_field_parameter(self,G_c,l_0):
         """
-        Function for calculating residual for order parameter
+        Function for calculating residual vector for order parameter
 
         Parameters
         ----------
@@ -299,3 +261,90 @@ class element_staggered():
                 + ((G_c/l_0)*N[0]*phi)+ (G_c*l_0)*np.matmul(np.transpose(Bmat),np.matmul(Bmat,elem_phi)))\
                 *self.Weights[j]*det_Jacobian
         return residual_phi
+    
+    def element_stiffness_displacement_plasticity(self, k_const:float, strain:np.array, strain_plas:np.array, alpha:float):
+        """
+        Function for calculating element stiffness matrix and internal force vector 
+        for displacement for elastic-plastic case and updates stress, plastic strain 
+        and hardening variable from material routine.
+
+        Parameters
+        ----------
+        k_const : float64
+            Parameter to avoid overflow for cracked elements.
+        
+        strain : Array of float64, size(num_elem,num_Gauss_2D,num_stress)
+            Strain at the integration points for all elements.
+            
+        strain_plas : Array of float64, size(num_elem,num_Gauss_2D,num_stress)
+            Plastic strain at the previous step at integration points for all elements.
+            
+        alpha : float64
+            Scalar hardening variable at previous step.
+        Returns
+        -------
+        K_uu : Array of float64, size(num_elem_var_u,num_elem_var_u)
+            element stiffness matrix.
+        
+        F_int_elem : Array of float64, size(num_elem_var_u)
+            element internal force vector.
+        
+        stress : Array of float64, size(num_elem,num_Gauss_2D,num_stress)
+            Stress at the integration points for all elements.
+            
+        strain_plas : Array of float64, size(num_elem,num_Gauss_2D,num_stress)
+            Plastic strain at current step at integration points for all elements.
+            
+        alpha : float64
+            Scalar hardening variable at current step.
+            
+        """
+        problem = 'Elastic-Plastic'
+        num_dof_u = self.num_dof - 1
+
+        # total number of displacements per element
+        num_elem_var_u = self.num_node_elem * num_dof_u
+
+        # Initialize element stiffness matrix
+        K_uu = np.zeros((num_elem_var_u, num_elem_var_u))
+
+        # Initialize element internal force vector
+        F_int_elem = np.zeros(num_elem_var_u)
+
+        i_tot_var = self.elem_node
+        elem_phi = self.Phi[i_tot_var - 1]
+
+        for j in range(0, self.num_Gauss_2D):
+            material = material_routine(problem)
+            stress_new, C, strain_plas_new, alpha_new = material.material_plasticity(strain[self.elem,j,:],strain_plas[self.elem,j,:],alpha)
+            gpos = self.Points[j]
+
+            # Calling shape function and its derivatives from shape function class
+            shape = shape_function(self.num_node_elem, gpos, self.elem_coord)
+            N = shape.get_shape_function()
+            dNdX = shape.get_shape_function_derivative()
+            # Call detereminant of Jacobian
+            det_Jacobian = shape.get_det_Jacobian()
+
+            # phase field order parameter
+            phi = np.matmul(N[0], elem_phi)
+            if phi > 1:
+                phi = 1
+
+            # Compute B matrix
+            B = Bmatrix(dNdX, self.num_node_elem)
+            Bmat = B.Bmatrix_disp()
+            
+            # Compute element stiffness matrix
+            K_uu = K_uu + np.matmul(np.matmul(np.transpose(Bmat), C), Bmat) * (((1 - phi) ** 2) + k_const) \
+                * self.Weights[j] * det_Jacobian
+            
+            # Compute internal force vector for an element
+            F_int_elem = F_int_elem + np.matmul(np.transpose(Bmat), stress_new) * (((1 - phi) ** 2) + k_const) \
+                * self.Weights[j] * det_Jacobian
+            
+            # Update stress, plastic strain and hardening variable
+            self.stress[self.elem,j,:] = stress_new
+            strain_plas[self.elem,j,:] = strain_plas_new
+            alpha = alpha_new
+        return K_uu, F_int_elem, self.stress, strain_plas, alpha

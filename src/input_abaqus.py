@@ -7,10 +7,40 @@
 import numpy as np
 
 class input_parameters():
+    """Input parameters class where all inputs are defined. 
+    Four different functions are implemented based on the input type."""
     def __init__(self):
         pass
     
     def geometry_parameters(self):
+        """
+        Input parameters related to geometry are defined.
+        **Nodes** and **elements** of a geometry are generated in ABAQUS.
+
+        Returns
+        -------
+        num_dim : int
+            Dimension of a problem.
+        num_node_elem : int
+            Number of nodes per element.
+        nodes : Array of float64, size(num_node,num_dim)
+            Co-ordinates of all field nodes.
+        num_node : int
+            Number of nodes.
+        elements : Array of int, size(num_elem,num_node_elem)
+            Element connectivity matrix.
+        num_elem : int
+            Total number of elements.
+        num_dof : int
+            Total number of DOFs per node.
+        num_Gauss : int
+            Total number of Gauss points used for integration in 1-dimension.
+        num_stress : int
+            Number of independent stress components.
+        problem : str
+            Problem type either 'Elastic' or 'Elastic_Plastic'.
+
+        """
         # dimension of a problem
         num_dim = 2
         
@@ -69,6 +99,26 @@ class input_parameters():
         return num_dim, num_node_elem, nodes,num_node,elements,num_elem, num_dof, num_Gauss, num_stress, problem
     
     def material_parameters_elastic(self):
+        """
+        Material specific input parameters are defined.
+        This function is for **elastic** problem.
+        
+        Returns
+        -------
+        k_const : float64
+            Parameter to avoid overflow for cracked elements.
+        G_c : float64
+            Critical energy release for unstable crack or damage.
+        l_0 : float64
+            Length parameter which controls the spread of damage.
+        Young : float64
+            Youngs modulus.
+        Poisson : float64
+            Poissons ratio.
+        stressState : int
+            If stressState == 1 plane stress; if stressState = 2 plane strain.
+
+        """
         # Material specific parameters
         
         # parameter to avoid overflow for cracked elements
@@ -92,6 +142,31 @@ class input_parameters():
         return k_const,G_c,l_0,Young,Poisson,stressState
         
     def material_parameters_elastic_plastic(self):
+        """
+
+        Material specific input parameters are defined.
+        This function is for **elastic-plastic** problem.
+        
+        Returns
+        -------
+        k_const : float64
+            Parameter to avoid overflow for cracked elements.
+        G_c : float64
+            Critical energy release for unstable crack or damage.
+        l_0 : float64
+            Length parameter which controls the spread of damage.
+        stressState : int
+            If stressState == 1 plane stress; if stressState = 2 plane strain.
+        shear : float64
+            Shear modulus.
+        bulk : float64
+            Bulk modulus.
+        sigma_y : float64
+            Yield stress.
+        hardening : float64
+            Hardening modulus.
+
+        """
         # Material specific parameters
         
         # parameter to avoid overflow for cracked elements
@@ -121,22 +196,34 @@ class input_parameters():
         return k_const, G_c, l_0, stressState, shear, bulk, sigma_y, hardening
 
     def time_integration_parameters(self):
+        """
+        Inputs for time integration parameters are defined.
+
+        Returns
+        -------
+        num_step : int
+            Number of time steps.
+        max_iter : int
+            Maximum number of Newton-Raphson iterations.
+        max_tol : float64
+            Tolerance for iterative solution.
+        disp_inc : float64
+            Displacmenet increment per time steps.
+
+        """
         
         # Inputs for time integration parameters
         
         # number of time steps
-        num_step = 1000
+        num_step = 10
         
         # maximum number of Newton-Raphson iterations
-        max_iter = 5
+        max_iter = 10
         
         # tolerance for iterative solution
         max_tol = 1e-4
         
-        # time increment for numerical integration
-        delta_time = 1
-        
         # displacmenet increment per time steps
         disp_inc = 1e-5  # mm
         
-        return num_step, max_iter, max_tol, delta_time, disp_inc
+        return num_step, max_iter, max_tol, disp_inc

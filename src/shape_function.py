@@ -6,29 +6,24 @@
 # *************************************************************************
 import numpy as np
 class shape_function:
-    def __init__(self,num_node_elem,gpos,elem_coord):
+    """Class for computing shape function, derivatives of shape function and determinant of Jacobian.
+    
+    Shape functions are computed using Lagrange interpolant basis.
+    
+    Derivatives of shape functions are computed using gradients of Lagrange interpolant basis.
+    
+    Lagrange interpolant basis are implemented for four different cases. 
+    
+    1. Two node line element.\n
+    2. Three node triangular element.\n
+    3. Four node quadrilateral element.\n
+    4. Eight node quadrilateral element.
+    """
+    def __init__(self,num_node_elem:int,gpos:list,elem_coord:np.array):
         self.num_node_elem = num_node_elem
         self.gpos = gpos
         self.elem_coord = elem_coord
         if num_node_elem == 2:
-            """
-            Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates 
-            for a two node line element.
-            
-    
-            Parameters
-            ----------
-            point : array of float64
-            point.
-    
-            Returns
-            -------
-            N : array of float64
-                Lagrange interpolant shape function.
-            dNdxi : array of float64
-                gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
-    
-            """
             ########### two node line element ########## 
             #  
             #    1---------2
@@ -40,24 +35,6 @@ class shape_function:
             self.dNdxi = np.array([1/2,-1/2])[np.newaxis]
 
         elif num_node_elem == 3:
-            """
-            Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates 
-            for a three node triangular element.
-    
-            Parameters
-            ----------
-            point : array of float64
-                point.
-    
-            Returns
-            -------
-            N : array of float64
-                Lagrange interpolant shape function.
-            dNdxi : array of float64
-                gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
-    
-            """
-    
             ########### three node triangular element ########## 
             #  
             #    1---------2
@@ -78,23 +55,6 @@ class shape_function:
             self.dNdxi = np.r_[dNdpsi,dNdeta]
 
         elif num_node_elem == 4:
-            """
-            Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates 
-            for a four node quadrilateral element.
-    
-            Parameters
-            ----------
-            point : array of float64
-                point.
-    
-            Returns
-            -------
-            N : array of float64
-                Lagrange interpolant shape function.
-            dNdxi : array of float64
-                gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
-    
-            """
             ########### four node quadrilateral element ########## 
             #  
             #    4---------3
@@ -113,23 +73,6 @@ class shape_function:
             self.dNdxi = np.r_[dNdpsi,dNdeta]
 
         elif num_node_elem == 8:
-            """
-            Function to get the Lagrange interpolant basis and its gradients w.r.t its coordinates 
-            for an eight node quadrilateral element.
-    
-            Parameters
-            ----------
-            point : array of float64
-                point.
-    
-            Returns
-            -------
-            N : array of float64
-                Lagrange interpolant shape function.
-            dNdxi : array of float64
-                gradient of Lagrange interpolant shape function w.r.t respecive coordinates.
-    
-            """
             ########### eight node quadrilateral element ########## 
             #
             #    7-----6-----5
@@ -152,16 +95,48 @@ class shape_function:
         self.Jacobian = np.matmul(self.dNdxi,self.elem_coord)
             
     def get_shape_function(self):
+        """
+        Function to compute shape functions using Lagrange interpolant basis.
+
+        Returns
+        -------
+        Array of float64
+            Shape functions.
+
+        """
         return self.N
 
     def get_det_Jacobian(self):
-        
+        """
+        Function to compute determinant of Jacobian matrix.
+
+        Raises
+        ------
+        ValueError
+            Determinant of Jacobian matrix should be positive.
+
+        Returns
+        -------
+        float64
+            Determinant of Jacobian matrix.
+
+        """
         self.det_Jacobian = np.linalg.det(self.Jacobian)
         if self.det_Jacobian <= 0:
             raise ValueError('Solution is terminated since, determinant of Jacobian is either zero or negative.')
         return self.det_Jacobian
     
     def get_shape_function_derivative(self):
+        """
+        Function to compute derivatives of shape functions using inverse of 
+        Jacobian matrix and gradients of Lagrange interpolant basis.
+
+        Returns
+        -------
+        Array of float64
+            Derivatives of shape functions.
+
+        """
         Jacobian_inv = np.linalg.inv(self.Jacobian)
         self.dNdX = np.matmul(Jacobian_inv,self.dNdxi)
         return self.dNdX

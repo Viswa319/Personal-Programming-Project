@@ -436,3 +436,97 @@
     #             order_parameter[i] = disp[jtotv]
     #     file_name = 'time_{}.vtk'.format(step)
     #     vtk_generator(file_name,deflection,order_parameter)
+    
+# def test_essential_boundary_conditions_true():
+#     '''
+#     UNIT TESTING
+#     Aim: Test essential boundary conditions
+
+#     Expected result : Array of global stiffness matrix after applying boundary conditions
+
+#     Test command : pytest test.py::test_essential_boundary_conditions_true()
+
+#     Remarks : test case passed successfully
+#     '''
+#     actual_global_K_disp,actual_global_force_disp = boundary_condition(num_dof_u,fixed_dof,global_K_disp,global_force_disp,disp,disp_bc)
+#     expected_global_K_disp = np.eye(num_tot_var_u)
+#     assert(array_equiv(np.round(actual_global_K_disp,6),np.round(expected_global_K_disp,6))) is True
+
+# def element_internal_force(self,k_const):
+#         """
+#         Function for computing internal force vector for an element
+        
+#         Parameters
+#         ----------
+#         k_const : float64
+#             parameter to avoid overflow for cracked elements.
+
+#         Returns
+#         -------
+#         F_int_elem : Array of float64, size(num_elem_var_u)
+#             internal force vector for an element.
+
+#         """
+#         num_dof_u = self.num_dof-1
+        
+#         # total number of displacements per element 
+#         num_elem_var_u = self.num_node_elem*num_dof_u
+        
+#         # Initialize element internal force vector   
+#         F_int_elem = np.zeros(num_elem_var_u)
+        
+#         i_tot_var = self.elem_node
+#         elem_phi = self.Phi[i_tot_var-1]
+        
+
+#         for j in range(0,self.num_Gauss_2D):
+#             gpos = self.Points[j]
+            
+#             # Calling shape function and its derivatives from shape function class
+#             shape = shape_function(self.num_node_elem,gpos,self.elem_coord)
+#             N = shape.get_shape_function()
+#             dNdX = shape.get_shape_function_derivative()
+#             # Call detereminant of Jacobian
+#             det_Jacobian = shape.get_det_Jacobian()
+            
+#             # phase field order parameter
+#             phi = np.matmul(N[0],elem_phi)
+#             if phi > 1:
+#                 phi = 1 
+            
+#             # Compute B matrix
+#             B = Bmatrix(dNdX,self.num_node_elem)
+#             Bmat = B.Bmatrix_disp()
+            
+#             # Compute internal force vector for an element
+#             F_int_elem = F_int_elem + np.matmul(np.transpose(Bmat),self.stress[self.elem,j,:])*(((1-phi)**2)+k_const) \
+#                 *self.Weights[j]*det_Jacobian
+            
+#         return F_int_elem
+
+# def t2_otimes_t2(self,A,B):
+#         """
+        
+
+#         Parameters
+#         ----------
+#         A : TYPE
+#             DESCRIPTION.
+#         B : TYPE
+#             DESCRIPTION.
+
+#         Returns
+#         -------
+#         C4 : TYPE
+#             DESCRIPTION.
+
+#         """
+#         n = len(A)
+#         C4 = np.zeros((n,n,n,n))
+#         for i in range(n):
+#             for j in range(n):
+#                 for k in range(n):
+#                     for l in range(n):
+#                         C4[i,j,k,l] = A[i,j]*B[k,l]
+        
+        # return C4

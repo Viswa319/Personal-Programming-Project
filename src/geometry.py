@@ -4,10 +4,14 @@
 #                         Personal Programming Project
 #                               65130
 # *************************************************************************
-def quadrature_coefficients(numgauss):
+def quadrature_coefficients(numgauss:int):
     """
-    Function to get Gaussian quadrature points and weights  
-
+    Function to get Gaussian quadrature points and weights.
+    
+    Gaussian points and weights for 1-Dimension are called from inbuilt function using **numpy**.
+    
+    Using these points and weights in 1-Dimension, points and weights are computed in 2-Dimension respectively.
+    
     Parameters
     ----------
     numgauss : int
@@ -22,10 +26,12 @@ def quadrature_coefficients(numgauss):
 
     """
     import numpy.polynomial.legendre as ptwt
+    
     # Gauss quadrature points and weights are computed using inbuilt funtion in numpy 
     PtsWts = ptwt.leggauss(numgauss)
     points = PtsWts[0]
     weights = PtsWts[1]
+    
     Points = []
     Weights = []
     # Computing Gauss points and weights in 2-dimension

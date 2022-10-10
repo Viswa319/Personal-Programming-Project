@@ -8,29 +8,26 @@ from numpy import array,array_equiv
 import numpy as np
 from geometry import quadrature_coefficients
 from material_routine import material_routine
+from input_abaqus import input_parameters
 import pytest
 from element_staggered import element_staggered
 from shape_function import shape_function
 from Bmatrix import Bmatrix
 from boundary_condition import boundary_condition
 from assembly_index import assembly
+
+elem = 0
+inputs = input_parameters()
+ 
+num_dim, num_node_elem, nodes, num_node, elements, num_elem, num_dof, num_Gauss, num_stress, problem = inputs.geometry_parameters()
+k_const,G_c,l_0,Young,Poisson,stressState = inputs.material_parameters_elastic()
+num_step, max_iter, max_tol, disp_inc = inputs.time_integration_parameters()
+num_Gauss_2D = num_Gauss**num_dim
 nodes = np.array([[0,0],[1,0],[1,1],[0,1]])
 num_node = len(nodes)
 elements = np.array([[1,2,3,4]])
 num_elem = len(elements)
-num_node_elem = 4
-num_dim = 2
-k_const = 1e-7 # parameter to avoid overflow for cracked elements
-G_c = 2.7 # MPa mm # critical energy release for unstable crack or damage
-l_0 = 0.04 # mm # length parameter which controls the spread of damage
-Young = 210000 # Mpa # Young's modulus 
-Poisson = 0.3 # Poisson's ratio
-num_Gauss = 2
-elem = 0
-num_Gauss_2D = num_Gauss**num_dim
-num_stress = 3 # number of independent stress components 
-stressState = 2
-num_dof = 3
+
 # the number of DOFs for displacements per node
 num_dof_u = num_dof-1
 
@@ -62,15 +59,12 @@ phi = np.zeros(num_tot_var_phi)
 Points,Weights = quadrature_coefficients(num_Gauss)
     
 # Call Stiffness tensor from material routine
-mat = material_routine(Young,Poisson)
-if stressState == 1: # Plane stress   
-    C = mat.planestress()
-elif stressState == 2: # Plane strain
-    C = mat.planestrain()
+mat = material_routine(problem)
+C = mat.material_elasticity()
 
-elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
-actual_K_phiphi = elem_stiff.element_stiffness_field_parameter(G_c,l_0)
-actual_K_uu = elem_stiff.element_stiffness_displacement(C,k_const)
+elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+actual_K_phiphi, residual_elem_phi = elem_stiff.element_stiffness_field_parameter(G_c,l_0)
+actual_K_uu, F_int_elem = elem_stiff.element_stiffness_displacement(C,k_const)
 
 # Boundary points for all edges
 bot = np.where(nodes[:,1] == min(nodes[:,1]))[0] # bottom edge nodes
@@ -90,8 +84,8 @@ fixed_dof[bot*2] = 1
 global_force_disp = np.zeros(num_tot_var_u)
 global_K_disp = np.zeros((num_tot_var_u, num_tot_var_u))
 for elem in range(0,num_elem):
-    elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
-    actual_K_uu = elem_stiff.element_stiffness_displacement(C,k_const)
+    elem_stiff = element_staggered(elem,Points,Weights,disp,phi,stress,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D)
+    actual_K_uu, F_int_elem = elem_stiff.element_stiffness_displacement(C,k_const)
     assemble = assembly()
     
     index_u = assemble.assembly_index_u(elem,num_dof_u,num_node_elem,elements)
@@ -460,20 +454,6 @@ def test_global_assembly_stiffness_disp_true():
     '''
     assert(array_equiv(np.round(actual_K_uu,6),np.round(global_K_disp,6))) is True
     
-def test_essential_boundary_conditions_true():
-    '''
-    UNIT TESTING
-    Aim: Test essential boundary conditions
-
-    Expected result : Array of global stiffness matrix after applying boundary conditions
-
-    Test command : pytest test.py::test_essential_boundary_conditions_true()
-
-    Remarks : test case passed successfully
-    '''
-    actual_global_K_disp,actual_global_force_disp = boundary_condition(num_dof_u,fixed_dof,global_K_disp,global_force_disp,disp,disp_bc)
-    expected_global_K_disp = np.eye(num_tot_var_u)
-    assert(array_equiv(np.round(actual_global_K_disp,6),np.round(expected_global_K_disp,6))) is True
 
 test_stiffness_phasefield_true()
 test_stiffness_phasefield_symmetry()
@@ -488,4 +468,3 @@ test_stiffness_disp_symmetry()
 test_B_matrix_disp_true()
 test_eigen_values_stiffness_disp_positive_true()
 test_global_assembly_stiffness_disp_true()
-test_essential_boundary_conditions_true()

@@ -6,24 +6,33 @@
 # *************************************************************************
 import numpy as np
 class Bmatrix:
-    def __init__(self,dNdX,num_node_elem):
+    """Class for computing B matrix for displacement and phase field order parameter.
+    
+    B matrix for displacement is the connectivity matrix for strain and displacement.
+    
+    B matrix for phase-field order parameter is the connectivity matrix for order parameter 
+    and its gradient. It is nothing but the derivatives of shape functions.
+    """
+    
+    
+    def __init__(self,dNdX:np.array,num_node_elem:int):
         self.dNdX = dNdX
         self.num_node_elem = num_node_elem
     def Bmatrix_disp(self):
         """
-        Function for computing strain and displacement connectivity matrix (B)
+        Function for computing B matrix which is strain and displacement connectivity matrix.
 
         Parameters
         ----------
         dNdX : Array of float64, size(num_dim,num_node_elem)
-            derivatives of shape functions w.r.t. global coordinates.
+            Derivatives of shape functions w.r.t. global coordinates.
         num_node_elem : int
-            number of nodes per element, possible nodes are 2,3,4 and 8 per element.
+            Number of nodes per element, possible nodes are 2,3,4 and 8 per element.
         
         Returns
         -------
         B : Array of float64, size(3,2*num_node_elem)
-            strain and displacement connectivity matrix of a node.
+            Strain and displacement connectivity matrix of a node.
 
         """
         B = np.zeros((3, 2*self.num_node_elem))
@@ -36,5 +45,15 @@ class Bmatrix:
         return B
     
     def Bmatrix_phase_field(self):
+        """
+        Function for computing B matrix which is the connectivity matrix for order parameter 
+        and its gradient.
+
+        Returns
+        -------
+        B : Array of float64, size(num_dim,num_node_elem)
+            Order parameter and its gradient connectivity matrix of a node.
+
+        """
         B = self.dNdX
         return B
