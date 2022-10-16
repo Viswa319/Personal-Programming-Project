@@ -8,8 +8,11 @@ import numpy as np
 from element_staggered import element_staggered
 from assembly_index import assembly
 class global_assembly():
-    """Class to assemble element stiffness matrices and element residual vectors to global stiffness matrix
+    """
+    Class to assemble element stiffness matrices and element residual vectors to global stiffness matrix
     and global residual vector respectively for both displacement and fracture phase field.
+    I have excluded this functions from my routine, since it is taking more time to 
+    execute, instead I have assemble directly in main file. 
     """
     def __init__(self,Points,Weights,disp,Phi,stress,strain,strain_energy,elements,nodes,num_dof,num_node_elem,num_Gauss_2D):
         """

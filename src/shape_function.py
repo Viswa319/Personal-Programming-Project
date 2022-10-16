@@ -6,7 +6,8 @@
 # *************************************************************************
 import numpy as np
 class shape_function:
-    """Class for computing shape function, derivatives of shape function and determinant of Jacobian.
+    """
+    Class for computing shape function, derivatives of shape function and determinant of Jacobian.
     
     Shape functions are computed using Lagrange interpolant basis.
     
@@ -19,6 +20,7 @@ class shape_function:
     3. Four node quadrilateral element.\n
     4. Eight node quadrilateral element.
     """
+    
     def __init__(self,num_node_elem:int,gpos:list,elem_coord:np.array):
         self.num_node_elem = num_node_elem
         self.gpos = gpos

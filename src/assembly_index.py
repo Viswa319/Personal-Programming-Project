@@ -34,9 +34,9 @@ class assembly:
         num_elem_var_u = num_node_elem * num_dof_u  # total number of element variables
         k = 0
         index = np.zeros(num_elem_var_u, int)
-        for i in range(0, num_node_elem):
+        for i in range(num_node_elem):
             temp = (elements[elem, i] - 1) * num_dof_u
-            for j in range(0, num_dof_u):
+            for j in range(num_dof_u):
                 index[k] = temp + j
                 k = k + 1
         return index
@@ -67,9 +67,9 @@ class assembly:
         num_elem_var_phi = num_node_elem*num_dof_phi # total number of element variables
         k = 0
         index = np.zeros(num_elem_var_phi,int)
-        for i in range(0,num_node_elem):
+        for i in range(num_node_elem):
             temp = (elements[elem,i]-1)*num_dof_phi
-            for j in range(0,num_dof_phi):
+            for j in range(num_dof_phi):
                 index[k] = temp+j
                 k = k+1
         return index
@@ -102,9 +102,9 @@ class assembly:
         num_elem_var_phi = num_node_elem*num_dof_phi # total number of element variables
         k = 0
         index = np.zeros(num_elem_var_phi,int)
-        for i in range(0,num_node_elem):
+        for i in range(num_node_elem):
             temp = (elements[elem,i]-1)*num_dof_phi
-            for j in range(0,num_dof_phi):
+            for j in range(num_dof_phi):
                 index[k] = temp+j+num_tot_var_u
                 k = k+1
         return index

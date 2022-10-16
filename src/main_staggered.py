@@ -192,7 +192,7 @@ def main():
         # strain energy is computed and updated accordingly in solve_stress_strain class
         if problem == 0:
             get_stress = solve_stress_strain(num_Gauss_2D, num_stress, num_node_elem, num_dof_u, elements, disp, Points, nodes, C, strain_energy, problem)
-        elif problem == 1 or problem == 2:
+        elif problem == 1:
             get_stress = solve_stress_strain(num_Gauss_2D, num_stress, num_node_elem, num_dof_u, elements, disp, Points, nodes, C, strain_energy, problem, strain_plas, alpha, hardening, sigma_y)
         strain_energy = get_stress.solve_strain_energy
     
@@ -267,8 +267,9 @@ def main():
                 
                 if problem == 0:
                     K_uu, F_int_elem = elem_stiff.element_stiffness_displacement(C, k_const)
-                if problem == 1 or 2:
+                if problem == 1:
                     K_uu, F_int_elem, stress, strain_plas, alpha_cur = elem_stiff.element_stiffness_displacement_plasticity(k_const, strain, strain_plas, alpha[elem], problem)
+                    alpha[elem] = alpha_cur
                 assemble = assembly()
                 index_u = assemble.assembly_index_u(elem, num_dof_u, num_node_elem, elements)
     
@@ -276,7 +277,7 @@ def main():
                 global_K_disp[X, Y] = global_K_disp[X, Y] + K_uu
                 F_int[index_u] = F_int[index_u] + F_int_elem
                 del X, Y
-                alpha[elem] = alpha_cur
+                
             
             global_force_disp = F_int - F_ext
             # Applying essential boundary conditions for global stiffness matrix and global residual vector,
@@ -333,16 +334,16 @@ def main():
             force_plot.append(-sum(F_int[(bot * 2 + 1)]))
         if load_type == 1:
             force_plot.append(-sum(F_int[(bot * 2)]))
-        if (step + 1) % 1000 == 0:
-            plot_field_parameter(nodes, phi, tot_inc)
-            datadict_2[np.round(tot_inc,4)] = phi.tolist()
-            datadict[np.round(tot_inc,4)] = disp.tolist()
+        # if (step + 1) % 1000 == 0:
+        #     plot_field_parameter(nodes, phi, tot_inc)
+        #     datadict_2[np.round(tot_inc,4)] = phi.tolist()
+        #     datadict[np.round(tot_inc,4)] = disp.tolist()
     end_time = time.time()
     print('total time:', end_time - start_time)
-    with open("shear_disp.json", "w") as opf:    
-        json.dump(datadict, opf, indent=4)
-    with open("shear_phi.json", "w") as opf:    
-        json.dump(datadict_2, opf, indent=4)    
+    # with open("shear_disp.json", "w") as opf:    
+    #     json.dump(datadict, opf, indent=4)
+    # with open("shear_phi.json", "w") as opf:    
+    #     json.dump(datadict_2, opf, indent=4)    
     plot_load_displacement(disp_plot, force_plot)
     X_Disp = disp[0:num_tot_var_u:2]
     Y_Disp = disp[1:num_tot_var_u:2]

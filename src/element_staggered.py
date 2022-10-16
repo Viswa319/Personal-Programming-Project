@@ -77,6 +77,7 @@ class element_staggered():
         ----------
         C : Array of float64, size(k)
             Stiffness tensor.
+        
         k_const : float64
             parameter to avoid overflow for cracked elements.
 
@@ -103,7 +104,7 @@ class element_staggered():
         i_tot_var = self.elem_node
         elem_phi = self.Phi[i_tot_var - 1]
 
-        for j in range(0, self.num_Gauss_2D):
+        for j in range(self.num_Gauss_2D):
             gpos = self.Points[j]
 
             # Calling shape function and its derivatives from shape function class
@@ -140,6 +141,7 @@ class element_staggered():
         ----------
         G_c : float64
             critical energy release for unstable crack or damage.
+        
         l_0 : float64
             length parameter which controls the spread of damage.
 
@@ -147,6 +149,7 @@ class element_staggered():
         -------
         K_phiphi : Array of float64, size(num_elem_var_phi,num_elem_var_phi)
             element stiffness matrix for phase-field order parameter.
+        
         
         residual_phi : Array of float64, size(num_elem_var_phi)
             element residual vector for phase-field order parameter.
@@ -168,7 +171,7 @@ class element_staggered():
         i_tot_var = self.elem_node
         elem_phi = self.Phi[i_tot_var - 1]
 
-        for j in range(0, self.num_Gauss_2D):
+        for j in range(self.num_Gauss_2D):
             gpos = self.Points[j]
 
             # Calling shape function and its derivatives from shape function class
@@ -210,6 +213,7 @@ class element_staggered():
         ----------
         G_c : float64
             critical energy release for unstable crack or damage.
+        
         l_0 : float64
             length parameter which controls the spread of damage.
 
@@ -231,7 +235,7 @@ class element_staggered():
         i_tot_var = self.elem_node
         elem_phi = self.Phi[i_tot_var-1]
         
-        for j in range(0,self.num_Gauss_2D):
+        for j in range(self.num_Gauss_2D):
             gpos = self.Points[j]
             
             # Calling shape function and its derivatives from shape function class
@@ -278,6 +282,11 @@ class element_staggered():
             
         alpha : float64
             Scalar hardening variable at previous step.
+        
+        problem : int
+            If problem = 0 elastic, \n
+            if problem = 1 elastic-plastic brittle, \n
+            
         Returns
         -------
         K_uu : Array of float64, size(num_elem_var_u,num_elem_var_u)
@@ -295,6 +304,7 @@ class element_staggered():
         alpha : float64
             Scalar hardening variable at current step.
             
+        
         """
         num_dof_u = self.num_dof - 1
 
@@ -310,7 +320,7 @@ class element_staggered():
         i_tot_var = self.elem_node
         elem_phi = self.Phi[i_tot_var - 1]
 
-        for j in range(0, self.num_Gauss_2D):
+        for j in range(self.num_Gauss_2D):
             material = material_routine(problem)
             stress_new, C, strain_plas_new, alpha_new = material.material_plasticity(strain[self.elem,j,:],strain_plas[self.elem,j,:],alpha)
             gpos = self.Points[j]
@@ -343,4 +353,6 @@ class element_staggered():
             self.stress[self.elem,j,:] = stress_new
             strain_plas[self.elem,j,:] = strain_plas_new
             alpha = alpha_new
+        
         return K_uu, F_int_elem, self.stress, strain_plas, alpha
+    

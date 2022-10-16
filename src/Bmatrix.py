@@ -36,7 +36,7 @@ class Bmatrix:
 
         """
         B = np.zeros((3, 2 * self.num_node_elem))
-        for i in range(0, self.num_node_elem):
+        for i in range(self.num_node_elem):
             j = 2 * i
             k = 2 * i + 1
             B[0, j] = B[2, k] = self.dNdX[0, i]# dNdx[i]

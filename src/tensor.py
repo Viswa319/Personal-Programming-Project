@@ -8,7 +8,7 @@ import numpy as np
 class tensor():
     """This class consists of some tensor operations. 
     
-    This part of code is directly taken from **Prof. Kiefer**, provided in the plasticity exercise.
+    This part of code is taken from **Prof. Kiefer**, provided in the plasticity exercise.
     """
     
     def __init__(self):

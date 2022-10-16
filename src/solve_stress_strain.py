@@ -8,11 +8,13 @@ import numpy as np
 from shape_function import shape_function
 from Bmatrix import Bmatrix
 class solve_stress_strain():
-    """Class to compute stress, strain and strain energy at integration points for each element.
+    """
+    Class to compute stress, strain and strain energy at integration points for each element.
     
     Strain energy is computed and compared to previous value and updated accordingly. 
     It is computed using elastic strain and stress.
     """
+    
     def __init__(self,num_Gauss_2D, num_stress, num_node_elem, num_dof_u, elements, disp, Points, nodes, C, strain_energy, problem, strain_plas = None, alpha = None, hardening = None, sigma_y = None):
         """
         Class to compute stress, strain and strain energy at integration points for each element.
@@ -133,9 +135,12 @@ class solve_stress_strain():
                 if self.problem == 0:
                     # Compute stress values at the integration points for all elements
                     self.stress[elem,j,:] = np.matmul(self.C,self.strain[elem,j,:])
+                    
                     # Compute strain energy values at the integration points for all elements
                     self.strain_energy_new[elem,j] = 0.5*np.dot(self.stress[elem,j,:],self.strain[elem,j,:])
+                
                 elif self.problem == 1 or self.problem == 2:
+                    
                     # Compute elastic strain at the integration points for all elements
                     self.strain_elas[elem,j,:] = self.strain[elem,j,:] - self.strain_plas[elem,j,:]
                 
@@ -143,6 +148,7 @@ class solve_stress_strain():
                     self.stress[elem,j,:] = np.matmul(self.C,self.strain_elas[elem,j,:])
                 
                     strain_energy_plas = ((1 / 2) * self.hardening * (self.alpha[elem]**2)) + (self.sigma_y * self.alpha[elem])
+                    
                     # Compute strain energy values at the integration points for all elements
                     self.strain_energy_new[elem,j] = 0.5*np.dot(self.stress[elem,j,:],self.strain_elas[elem,j,:]) + strain_energy_plas
                 

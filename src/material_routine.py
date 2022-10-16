@@ -28,9 +28,13 @@ class material_routine:
 
         Parameters
         ----------
-        problem : str
-            problem == 'Elastic' or 'Elastic-Plastic'.
-
+        problem : int
+            If problem = 0 elastic, \n
+            if problem = 1 elastic-plastic brittle, \n
+        
+        load_type: int
+            If load_type = 0 tensile, \n
+            if load_type = 1 shear, \n
         Returns
         -------
         None.
@@ -109,6 +113,8 @@ class material_routine:
         The radial return stress-update algorithm for a **von Mises** plasticity model with linear **isotropic** hardening is implemented.
         
         This particular code has been used from my **plasticity course exercise**, where I have implemented it on my own.
+        
+        The problem I have implemented in exercise was for 3D one and now it has been modified to plane strain conditions.
         
         Parameters
         ----------
@@ -206,11 +212,12 @@ class material_routine:
             
             # restore fourth order stiffness tensor as third order matrix
             C_red = tensor.fourth_to_three(C)
+        
         # Restore stress into a vector
         stress_red = np.array([stress[0,0],stress[1,1],stress[0,1]])
+        
         # Restore plastic strain into a vector
         strain_plas_red = np.array([strain_plas[0,0],strain_plas[1,1],2*strain_plas[0,1]])
         
-        
-        
         return stress_red, C_red, strain_plas_red, alpha  
+    

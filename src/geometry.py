@@ -25,18 +25,18 @@ def quadrature_coefficients(numgauss:int):
             Weights for Gauss points used for integration.
 
     """
-    import numpy.polynomial.legendre as ptwt
+    import numpy.polynomial.legendre as quad
     
     # Gauss quadrature points and weights are computed using inbuilt funtion in numpy 
-    PtsWts = ptwt.leggauss(numgauss)
+    PtsWts = quad.leggauss(numgauss)
     points = PtsWts[0]
     weights = PtsWts[1]
     
     Points = []
     Weights = []
     # Computing Gauss points and weights in 2-dimension
-    for i in range(0,len(points)):
-        for j in range(0,len(points)):
+    for i in range(len(points)):
+        for j in range(len(points)):
             Points.append([points[i],points[j]])
             Weights.append(weights[i]*weights[j])
     return Points,Weights

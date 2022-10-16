@@ -49,8 +49,8 @@ def plot_displacement_contour(nodes,Disp,tot_inc):
 
     Parameters
     ----------
-    nodes : Array of float64, size(numnode,num_dim)
-        coordinates of all field nodes.
+    nodes : Array of float64, size(num_node,num_dim)
+        Co-ordinates of all field nodes.
     Disp : Array of float64, size(num_node)
             Displacement in vertical direction for tensile and in horizontal direction for shear.
     tot_inc : float64
@@ -75,7 +75,7 @@ def plot_field_parameter(nodes,phi,tot_inc):
 
     Parameters
     ----------
-    nodes : Array of float64, size(numnode,num_dim)
+    nodes : Array of float64, size(num_node,num_dim)
         coordinates of all field nodes.
     phi : Array of float64, size(num_tot_var_phi)
             Phase field order parameter.
@@ -120,7 +120,8 @@ def plot_load_displacement(disp,force):
     
 def plot_deformation_with_nodes(nodes,X_Disp,Y_Disp):
     """
-    Function to plot deformation of a problem
+    Function to plot deformation of a problem, This plot is used for one element,
+    and of course can be used for many elements.
 
     Parameters
     ----------
@@ -136,21 +137,49 @@ def plot_deformation_with_nodes(nodes,X_Disp,Y_Disp):
     None.
 
     """
-    alpha = 10
+    import numpy as np
+    alpha = 1
     numnode = len(nodes)
     X_disp = []
     Y_disp = []
+    nodes_disp = np.zeros(np.shape(nodes))
     for i in range(0, numnode):
         X_disp.append(nodes[i][0]+alpha*X_Disp[i])
         Y_disp.append(nodes[i][1]+alpha*Y_Disp[i])
+    nodes_disp[:,0] = nodes[:,0]+alpha*X_Disp
+    nodes_disp[:,1] = nodes[:,1]+alpha*Y_Disp
     fig3,ax3 = plt.subplots()
     # scatter plot for numerically solved deformation nodes
-    ax3.scatter(X_disp,Y_disp,c='b',marker = 'o',s = 5,label = 'Nodes after deformation')
+    ax3.scatter(X_disp,Y_disp,c='r',marker = 'o',s = 20,label = 'Nodes after deformation')
     # scatter plot for all field nodes
-    ax3.scatter(nodes[:,0], nodes[:,1],c='orange',s = 1,marker = '+', label = 'Nodes before deformation')
-   
-    plt.legend(loc='lower center')
+    ax3.scatter(nodes[:,0], nodes[:,1],c='b',s = 20,marker = 'o', label = 'Nodes before deformation')
+    
+    # Boundary points
+    bot = np.where(nodes[:,1] == min(nodes[:,1]))[0] # bottom edge nodes
+    left = np.where(nodes[:,0] == min(nodes[:,0]))[0] # left edge nodes
+    right = np.where(nodes[:,0] == max(nodes[:,0]))[0] # right edge nodes
+    top = np.where(nodes[:,1] == max(nodes[:,1]))[0] # top edge nodes
+
+    # plot top edge nodes
+    ax3.plot(nodes[top][:,0],nodes[top][:,1],c ='b',linestyle = '--')
+    # plot bottom edge nodes
+    ax3.plot(nodes[bot][:,0],nodes[bot][:,1],c ='b',linestyle = '--')
+    # plot right edge nodes
+    ax3.plot(nodes[right][:,0],nodes[right][:,1],c ='b',linestyle = '--')
+    # plot left edge nodes
+    ax3.plot(nodes[left][:,0],nodes[left][:,1],c ='b',linestyle = '--')
+    
+    # plot top edge nodes
+    ax3.plot(nodes_disp[top][:,0],nodes_disp[top][:,1],c ='r',linestyle = '-.')
+    # plot bottom edge nodes
+    ax3.plot(nodes_disp[bot][:,0],nodes_disp[bot][:,1],c ='r',linestyle = '-.')
+    # plot right edge nodes
+    ax3.plot(nodes_disp[right][:,0],nodes_disp[right][:,1],c ='r',linestyle = '-.')
+    # plot left edge nodes
+    ax3.plot(nodes_disp[left][:,0],nodes_disp[left][:,1],c ='r',linestyle = '-.')
+    
+    plt.legend(loc='center')
     ax3.set_title('Deformation')
     ax3.set_xlabel('x[mm]')
     ax3.set_ylabel('y[mm]')
-    plt.savefig(f'plots\disp_005_shear.png',dpi=600,transparent = True)
+    plt.savefig('plots\deform_one_element_1.png',dpi=600,transparent = True)

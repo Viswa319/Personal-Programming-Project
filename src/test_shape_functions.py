@@ -15,8 +15,6 @@ class Test_shape_functions:
     
     def test_shape_function_true(self):
         '''
-        Test shape function
-        ===================
         UNIT TESTING
         Aim: Test shape functions in shape_function class
     
@@ -39,8 +37,6 @@ class Test_shape_functions:
     
     def test_shape_function_derivative_true(self):
         '''
-        Test shape function derivative
-        ==============================
         UNIT TESTING
         Aim: Test shape function derivatives in shape_function class
     
@@ -66,8 +62,6 @@ class Test_shape_functions:
         
     def test_Jacobian_true(self):
         '''
-        Test determinant of Jacobian
-        ============================
         UNIT TESTING
         Aim: Test determinant of Jacobian in shape_function class
     

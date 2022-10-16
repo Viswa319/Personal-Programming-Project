@@ -8,7 +8,8 @@ import numpy as np
 
 class input_parameters():
     """Input parameters class where all inputs are defined. 
-    Four different functions are implemented based on the input type."""
+    Four different functions are implemented based on the input type.
+    """
     def __init__(self,load_type, problem):
         self.load_type = load_type
         self.problem = problem
@@ -17,7 +18,8 @@ class input_parameters():
         """
         Input parameters related to geometry are defined.
         **Nodes** and **elements** of a geometry are generated in ABAQUS.
-
+        ABAQUS input file has been modified such that same program is valid for all files.
+        
         Returns
         -------
         num_dim : int
@@ -87,6 +89,7 @@ class input_parameters():
         
             del start_elem, start_node
         
+        # Data used for one elemnet test, while executing one element test uncomment these lines.
         # nodes = np.array([[0,0],[1,0],[1,1],[0,1]])
         # num_node = len(nodes)
         # elements = np.array([[1,2,3,4]])
@@ -221,7 +224,7 @@ class input_parameters():
         # Inputs for time integration parameters
         
         # number of time steps
-        num_step = 2
+        num_step = 1000
         
         # maximum number of Newton-Raphson iterations
         max_iter = 10
