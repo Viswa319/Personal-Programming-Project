@@ -9,7 +9,7 @@ class assembly:
     """Class for computing indices to assemble global matrices."""
     def __init__(self):
         pass
-    def assembly_index_u(self,elem:int,num_dof_u:int,num_node_elem:int,elements:np.array):
+    def assembly_index_u(self, elem:int, num_dof_u:int, num_node_elem:int, elements:np.array):
         """
         Function to generate a vector which consists indices of global matrix for 
         respective element belongs to displacement.
@@ -31,17 +31,17 @@ class assembly:
             respective element belongs to displacement.
 
         """
-        num_elem_var_u = num_node_elem*num_dof_u # total number of element variables
+        num_elem_var_u = num_node_elem * num_dof_u  # total number of element variables
         k = 0
-        index = np.zeros(num_elem_var_u,int)
-        for i in range(0,num_node_elem):
-            temp = (elements[elem,i]-1)*num_dof_u
-            for j in range(0,num_dof_u):
-                index[k] = temp+j
-                k = k+1
+        index = np.zeros(num_elem_var_u, int)
+        for i in range(0, num_node_elem):
+            temp = (elements[elem, i] - 1) * num_dof_u
+            for j in range(0, num_dof_u):
+                index[k] = temp + j
+                k = k + 1
         return index
     
-    def assembly_index_phi(self,elem:int,num_dof_phi:int,num_node_elem:int,elements:np.array):
+    def assembly_index_phi(self, elem:int, num_dof_phi:int, num_node_elem:int, elements:np.array):
         """
         Function to generate a vector which consists indices of global matrix for 
         respective element belongs to order parameter for staggered scheme.
@@ -74,7 +74,7 @@ class assembly:
                 k = k+1
         return index
     
-    def assembly_index_phi_monolithic(self,elem:int,num_dof_phi:int,num_tot_var_u:int,num_node_elem:int,elements:np.array):
+    def assembly_index_phi_monolithic(self, elem:int, num_dof_phi:int, num_tot_var_u:int, num_node_elem:int, elements:np.array):
         """
         Function to generate a vector which consists indices of global matrix for 
         respective element belongs to order parameter for monolithic scheme.

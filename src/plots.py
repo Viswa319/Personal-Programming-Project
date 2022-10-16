@@ -12,7 +12,7 @@ def plot_nodes_and_boundary(nodes):
 
     Parameters
     ----------
-    nodes : Array of float64, size(numnode,nx)
+    nodes : Array of float64, size(num_node,num_dim)
         coordinates of all field nodes.
 
     Returns
@@ -39,9 +39,35 @@ def plot_nodes_and_boundary(nodes):
     ax1.plot(nodes[left][:,0],nodes[left][:,1],c ='b')
 
     ax1.set_title('Nodes')
-    ax1.set_xlabel('x[m]')
-    ax1.set_ylabel('y[m]')
+    ax1.set_xlabel('x[mm]')
+    ax1.set_ylabel('y[mm]')
 
+
+def plot_displacement_contour(nodes,Disp,tot_inc):
+    """
+    Function to plot contour plot of displacement in vertical direction for tensile and in horizontal direction for shear.
+
+    Parameters
+    ----------
+    nodes : Array of float64, size(numnode,num_dim)
+        coordinates of all field nodes.
+    Disp : Array of float64, size(num_node)
+            Displacement in vertical direction for tensile and in horizontal direction for shear.
+    tot_inc : float64
+        Applied displacement.
+
+    Returns
+    -------
+    None.
+
+    """
+    fig1,ax1 = plt.subplots()
+    plt.tricontourf(nodes[:,0], nodes[:,1], Disp)
+    ax1.set_title('Displacment $u_y$')
+    ax1.set_xlabel('x[mm]')
+    ax1.set_ylabel('y[mm]')
+    plt.colorbar()
+    plt.savefig(f'plots\disp={round(tot_inc,5)}_tensile.png'.format(round(tot_inc,5)),dpi=600,transparent = True)
 
 def plot_field_parameter(nodes,phi,tot_inc):
     """
@@ -91,52 +117,40 @@ def plot_load_displacement(disp,force):
     ax.set_xlabel('displacement [mm]')
     ax.set_ylabel('load [N]')
     plt.savefig('plots\load_displacement.png',dpi=600,transparent = True)
-
-def plot_load_displacement_mono(disp,force):
+    
+def plot_deformation_with_nodes(nodes,X_Disp,Y_Disp):
     """
-    Function to generate load vs displacement curve
+    Function to plot deformation of a problem
 
     Parameters
     ----------
-    disp : Array of float64, size(num_step)
-        Displacements.
-    force : Array of float64, size(num_step)
-        Load.
-
-    Returns
-    -------
-    None.
-
-    """
-    fig,ax = plt.subplots()
-    plt.plot(disp,force)
-    ax.set_title('Load vs displacement')
-    ax.set_xlabel('displacement [mm]')
-    ax.set_ylabel('load [N]')
-    plt.savefig('plots_mono\load_displacement.png',dpi=600,transparent = True)
-
-def plot_field_parameter_mono(nodes,phi,tot_inc):
-    """
-    Function to plot contour plot of field parameter (phi)
-
-    Parameters
-    ----------
-    nodes : Array of float64, size(numnode,num_dim)
+    nodes : Array of float64, size(num_node,num_dim)
         coordinates of all field nodes.
-    phi : Array of float64, size(num_tot_var_phi)
-            Phase field order parameter.
-    tot_inc : float64
-        Applied displacement.
+    X_Disp : Array of float64, size(num_node)
+        displacement in x-direction.
+    Y_Disp : Array of float64, size(num_node)
+        displacement in y-direction.
 
     Returns
     -------
     None.
 
     """
-    fig1,ax1 = plt.subplots()
-    plt.tricontourf(nodes[:,0], nodes[:,1], phi)
-    ax1.set_title(f'Field parameter $\phi$ at $u$ = {round(tot_inc,5)}'.format(round(tot_inc,5)))
-    ax1.set_xlabel('x[mm]')
-    ax1.set_ylabel('y[mm]')
-    plt.colorbar()
-    plt.savefig(f'plots_mono\Phi_u={round(tot_inc,5)}.png'.format(round(tot_inc,5)),dpi=600,transparent = True)
+    alpha = 10
+    numnode = len(nodes)
+    X_disp = []
+    Y_disp = []
+    for i in range(0, numnode):
+        X_disp.append(nodes[i][0]+alpha*X_Disp[i])
+        Y_disp.append(nodes[i][1]+alpha*Y_Disp[i])
+    fig3,ax3 = plt.subplots()
+    # scatter plot for numerically solved deformation nodes
+    ax3.scatter(X_disp,Y_disp,c='b',marker = 'o',s = 5,label = 'Nodes after deformation')
+    # scatter plot for all field nodes
+    ax3.scatter(nodes[:,0], nodes[:,1],c='orange',s = 1,marker = '+', label = 'Nodes before deformation')
+   
+    plt.legend(loc='lower center')
+    ax3.set_title('Deformation')
+    ax3.set_xlabel('x[mm]')
+    ax3.set_ylabel('y[mm]')
+    plt.savefig(f'plots\disp_005_shear.png',dpi=600,transparent = True)

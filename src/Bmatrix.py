@@ -15,7 +15,7 @@ class Bmatrix:
     """
     
     
-    def __init__(self,dNdX:np.array,num_node_elem:int):
+    def __init__(self, dNdX:np.array, num_node_elem:int):
         self.dNdX = dNdX
         self.num_node_elem = num_node_elem
     def Bmatrix_disp(self):
@@ -35,10 +35,10 @@ class Bmatrix:
             Strain and displacement connectivity matrix of a node.
 
         """
-        B = np.zeros((3, 2*self.num_node_elem))
+        B = np.zeros((3, 2 * self.num_node_elem))
         for i in range(0, self.num_node_elem):
-            j = 2*i
-            k = 2*i+1
+            j = 2 * i
+            k = 2 * i + 1
             B[0, j] = B[2, k] = self.dNdX[0, i]# dNdx[i]
             B[0, k] = B[1, j] = 0
             B[1, k] = B[2, j] = self.dNdX[1, i]# dNdy[i]

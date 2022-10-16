@@ -12,5 +12,3 @@
    Bmatrix
    assembly_index
    plots
-   tests
-   test_one_element

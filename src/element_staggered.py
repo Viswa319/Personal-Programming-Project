@@ -18,9 +18,6 @@ class element_staggered():
     """
     def __init__(self, elem, Points, Weights, disp, Phi, stress, strain_energy, elements, nodes, num_dof, num_node_elem, num_Gauss_2D):
         """
-        Class to compute element stiffness tensor for displacments and phase field order parameter
-                        element residual for phase field order parameter
-                        element internal force for displacements
 
         Parameters
         ----------
@@ -262,7 +259,7 @@ class element_staggered():
                 *self.Weights[j]*det_Jacobian
         return residual_phi
     
-    def element_stiffness_displacement_plasticity(self, k_const:float, strain:np.array, strain_plas:np.array, alpha:float):
+    def element_stiffness_displacement_plasticity(self, k_const:float, strain:np.array, strain_plas:np.array, alpha:float, problem = 1):
         """
         Function for calculating element stiffness matrix and internal force vector 
         for displacement for elastic-plastic case and updates stress, plastic strain 
@@ -299,7 +296,6 @@ class element_staggered():
             Scalar hardening variable at current step.
             
         """
-        problem = 'Elastic-Plastic'
         num_dof_u = self.num_dof - 1
 
         # total number of displacements per element

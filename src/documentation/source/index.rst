@@ -11,3 +11,4 @@ Welcome to Implementation of phase-field model of ductile fracture's documentati
    :caption: Contents:
 
    modules
+   tests

@@ -13,7 +13,7 @@ class solve_stress_strain():
     Strain energy is computed and compared to previous value and updated accordingly. 
     It is computed using elastic strain and stress.
     """
-    def __init__(self,num_Gauss_2D,num_stress,num_node_elem,num_dof_u,elements,disp,Points,nodes,C,strain_energy,strain_plas):
+    def __init__(self,num_Gauss_2D, num_stress, num_node_elem, num_dof_u, elements, disp, Points, nodes, C, strain_energy, problem, strain_plas = None, alpha = None, hardening = None, sigma_y = None):
         """
         Class to compute stress, strain and strain energy at integration points for each element.
 
@@ -39,8 +39,17 @@ class solve_stress_strain():
             Stiffness tensor.
         Strain_energy : Array of float64, size(num_elem,num_Gauss_2D)
             Strain energy at the integration points for all elements.
+        problem : int
+            If problem = 0 elastic, \n
+            if problem = 1 elastic-plastic brittle, \n
         strain_plas : Array of float64, size(num_elem,num_Gauss_2D,num_stress)
             Plastic strain at the integration points for all elements.
+        alpha : float64
+            Scalar hardening variable at previous step.
+        hardening : float64
+            Hardening modulus.
+        sigma_y : float64
+            Yield stress.
 
         Returns
         -------
@@ -58,7 +67,11 @@ class solve_stress_strain():
         self.nodes = nodes
         self.C = C
         self.strain_energy = strain_energy
+        self.problem = problem
         self.strain_plas = strain_plas
+        self.alpha = alpha
+        self.hardening = hardening
+        self.sigma_y = sigma_y
         self.solve()
         
     def solve(self):
@@ -112,17 +125,26 @@ class solve_stress_strain():
                 # Compute B matrix
                 B = Bmatrix(dNdX,self.num_node_elem)
                 Bmat = B.Bmatrix_disp()
-                 
+                
+                
                 # Compute strain values at the integration points for all elements
                 self.strain[elem,j,:] = np.matmul(Bmat,elem_disp[elem])
                 
-                # Compute elastic strain at the integration points for all elements
-                self.strain_elas[elem,j,:] = self.strain[elem,j,:] - self.strain_plas[elem,j,:]
-                # Compute stress values at the integration points for all elements
-                self.stress[elem,j,:] = np.matmul(self.C,self.strain[elem,j,:])
+                if self.problem == 0:
+                    # Compute stress values at the integration points for all elements
+                    self.stress[elem,j,:] = np.matmul(self.C,self.strain[elem,j,:])
+                    # Compute strain energy values at the integration points for all elements
+                    self.strain_energy_new[elem,j] = 0.5*np.dot(self.stress[elem,j,:],self.strain[elem,j,:])
+                elif self.problem == 1 or self.problem == 2:
+                    # Compute elastic strain at the integration points for all elements
+                    self.strain_elas[elem,j,:] = self.strain[elem,j,:] - self.strain_plas[elem,j,:]
                 
-                # Compute strain energy values at the integration points for all elements
-                self.strain_energy_new[elem,j] = 0.5*np.dot(self.stress[elem,j,:],self.strain_elas[elem,j,:])
+                    # Compute stress values at the integration points for all elements
+                    self.stress[elem,j,:] = np.matmul(self.C,self.strain_elas[elem,j,:])
+                
+                    strain_energy_plas = ((1 / 2) * self.hardening * (self.alpha[elem]**2)) + (self.sigma_y * self.alpha[elem])
+                    # Compute strain energy values at the integration points for all elements
+                    self.strain_energy_new[elem,j] = 0.5*np.dot(self.stress[elem,j,:],self.strain_elas[elem,j,:]) + strain_energy_plas
                 
                 # Checks strain energy value with previous strain energy value and updates accordingly
                 if self.strain_energy_new[elem,j] > self.strain_energy[elem,j]:

@@ -7,7 +7,6 @@
 import numpy as np
 from input_abaqus import input_parameters
 from tensor import tensor
-inputs = input_parameters()
 tensor = tensor()
 class material_routine:
     """Depends on the problem type respective variables are returned.
@@ -23,7 +22,7 @@ class material_routine:
     """
     
     
-    def __init__(self,problem:str):
+    def __init__(self,problem:str,load_type = None):
         """
         Inputs for material routine are called using input_parameters class based on the problem type.
 
@@ -37,14 +36,21 @@ class material_routine:
         None.
 
         """
-        if problem == 'Elastic':    
+        inputs = input_parameters(load_type,problem)
+        if problem == 0:    
             self.k_const, self.G_c, self.l_0, self.Young, self.Poisson, self.stressState = inputs.material_parameters_elastic()
         
-        elif problem == 'Elastic-Plastic':
+        elif problem == 1 or 2:
             self.k_const, self.G_c, self.l_0, self.stressState, self.shear, self.bulk, self.sigma_y, self.hardening = inputs.material_parameters_elastic_plastic()
             self.Young = (9 * self.bulk * self.shear) / ((3 * self.bulk) + self.shear)
             self.Poisson = ((3 * self.bulk) - (2 * self.shear)) / ((6 * self.bulk) + (2 * self.shear))
-    
+        elif problem == 'Monolithic':
+            from input_parameters import k_const, Young, Poisson, stressState
+            self.k_const = k_const
+            self.Young = Young
+            self.Poisson = Poisson
+            self.stressState = stressState
+            
     def planestress(self):  
         """
         Calculates stiffness tensor for plane stress condition.
@@ -102,7 +108,7 @@ class material_routine:
         """
         The radial return stress-update algorithm for a **von Mises** plasticity model with linear **isotropic** hardening is implemented.
         
-        This particular code has been used from my plasticity course exercise, where I have implemented it on my own.
+        This particular code has been used from my **plasticity course exercise**, where I have implemented it on my own.
         
         Parameters
         ----------
@@ -147,8 +153,14 @@ class material_routine:
         # Compute deviatoric strain tensor
         dev_strain = strain_new - (1 / 3) * np.trace(strain_new) * np.eye(3)
         
+        # Compute trial stress using elastic strain
+        stress_tr = np.matmul(Ce,(strain_new-strain_plas_n))
+        you = ((self.Young) * (self.Poisson)) / ((1 + self.Poisson)*(1 - 2 * self.Poisson))
+        stress_tr[2,2] = you*((strain_new[0,0] - strain_plas_n[0,0]) + (strain_new[1,1] - strain_plas_n[1,1]))
+        
         # Compute deviatoric stress tensor at trial step
-        dev_stress_tr = 2 * self.shear * (dev_strain - strain_plas_n)
+        # dev_stress_tr = 2 * self.shear * (dev_strain - strain_plas_n)
+        dev_stress_tr = stress_tr - (1/3)* np.trace(stress_tr) * np.eye(3)
         
         # Trial value of the increase in yield stress (scalar beta)
         beta_tr = self.hardening * alpha_n
@@ -158,6 +170,7 @@ class material_routine:
         
         # Norm of xi_tr
         norm_xi_tr = np.linalg.norm(xi_tr)
+        
         # Flow direction from trial state
         n_tr = xi_tr / norm_xi_tr
         
@@ -167,16 +180,14 @@ class material_routine:
         # Decide if elastic or elastic-plastic step
         if yield_tr < tol:
             # Elastic step 
-            C = (2 * self.shear * P4sym) + (self.bulk * np.tensordot(I,I,axes=0)) # Stiffness tensor
-            # restore fourth order stiffness tensor as third order matrix
-            C_red = tensor.fourth_to_three(C)
+            C_red = Ce
             strain_plas = strain_plas_n  # Plastic strain at new step
             alpha = alpha_n  # Scalar hardening variable at new step
             stress = np.matmul(C_red,(strain_new - strain_plas_n))  # Updated stress
         else:
             # Elastic plastic step
             gamma = yield_tr / (2 * self.shear + (2 / 3)*self.hardening)
-            dev_stress = dev_stress_tr - (2 * self.shear * gamma * n_tr)  # deciatoric stress
+            dev_stress = dev_stress_tr - (2 * self.shear * gamma * n_tr)  # deviatoric stress
             alpha = alpha_n + gamma * np.sqrt(2 / 3)  # Scalar hardening variable at new step
             strain_plas = strain_plas_n + gamma * n_tr  # Plastic strain at new step
             
@@ -192,13 +203,14 @@ class material_routine:
             
             # Update stress by adding spherical and deviatoric part
             stress = dev_stress + self.bulk * np.trace(strain_new) * I
-        
+            
+            # restore fourth order stiffness tensor as third order matrix
+            C_red = tensor.fourth_to_three(C)
         # Restore stress into a vector
         stress_red = np.array([stress[0,0],stress[1,1],stress[0,1]])
         # Restore plastic strain into a vector
         strain_plas_red = np.array([strain_plas[0,0],strain_plas[1,1],2*strain_plas[0,1]])
         
-        # restore fourth order stiffness tensor as third order matrix
-        C_red = tensor.fourth_to_three(C)
+        
         
         return stress_red, C_red, strain_plas_red, alpha  

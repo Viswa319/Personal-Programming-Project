@@ -13,15 +13,21 @@ import pytest
 from element_staggered import element_staggered
 from shape_function import shape_function
 from Bmatrix import Bmatrix
-from boundary_condition import boundary_condition
 from assembly_index import assembly
 
 elem = 0
-inputs = input_parameters()
+load_type = 0
+problem = 0
+inputs = input_parameters(load_type,problem)
  
-num_dim, num_node_elem, nodes, num_node, elements, num_elem, num_dof, num_Gauss, num_stress, problem = inputs.geometry_parameters()
+# num_dim, num_node_elem, nodes, num_node, elements, num_elem, num_dof, num_Gauss, num_stress = inputs.geometry_parameters()
 k_const,G_c,l_0,Young,Poisson,stressState = inputs.material_parameters_elastic()
 num_step, max_iter, max_tol, disp_inc = inputs.time_integration_parameters()
+num_Gauss = 2
+num_dim = 2
+num_dof = 3
+num_stress = 3
+num_node_elem = 4
 num_Gauss_2D = num_Gauss**num_dim
 nodes = np.array([[0,0],[1,0],[1,1],[0,1]])
 num_node = len(nodes)
@@ -57,7 +63,7 @@ phi = np.zeros(num_tot_var_phi)
 
 # Call Guass quadrature points and weights using inbuilt function
 Points,Weights = quadrature_coefficients(num_Gauss)
-    
+
 # Call Stiffness tensor from material routine
 mat = material_routine(problem)
 C = mat.material_elasticity()
@@ -94,14 +100,14 @@ for elem in range(0,num_elem):
     global_K_disp[X,Y] =  global_K_disp[X,Y] + actual_K_uu
     del X,Y
 elem_coord = nodes
-def test_shape_function_true():
+def test_shape_function_1_true():
     '''
     UNIT TESTING
     Aim: Test shape functions in shape_function class
 
     Expected result : Array of shape function
 
-    Test command : pytest test.py::test_shape_function_true()
+    Test command : pytest test_one_element.py::test_shape_function_1_true()
 
     Remarks : test case passed successfully
     '''
@@ -110,33 +116,66 @@ def test_shape_function_true():
     actual_N_1 = shape_1.get_shape_function()
     expected_N_1 = array([[0.62200847, 0.16666667, 0.0446582 , 0.16666667]])
     assert(array_equiv(np.round(actual_N_1,6),np.round(expected_N_1,6))) is True
-    
+
+def test_shape_function_2_true():
+    '''
+    UNIT TESTING
+    Aim: Test shape functions in shape_function class
+
+    Expected result : Array of shape function
+
+    Test command : pytest test_one_element.py::test_shape_function_2_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos_2 = Points[1]
     shape_2 = shape_function(num_node_elem,gpos_2,elem_coord)
     actual_N_2 = shape_2.get_shape_function()
     expected_N_2 = array([[0.16666667, 0.0446582 , 0.16666667, 0.62200847]])
     assert(array_equiv(np.round(actual_N_2,6),np.round(expected_N_2,6))) is True
     
+def test_shape_function_3_true():
+    '''
+    UNIT TESTING
+    Aim: Test shape functions in shape_function class
+
+    Expected result : Array of shape function
+
+    Test command : pytest test_one_element.py::test_shape_function_3_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos_3 = Points[2]
     shape_3 = shape_function(num_node_elem,gpos_3,elem_coord)
     actual_N_3 = shape_3.get_shape_function()
     expected_N_3 = array([[0.16666667, 0.62200847, 0.16666667, 0.0446582 ]])
     assert(array_equiv(np.round(actual_N_3,6),np.round(expected_N_3,6))) is True
     
+def test_shape_function_4_true():
+    '''
+    UNIT TESTING
+    Aim: Test shape functions in shape_function class
+
+    Expected result : Array of shape function
+
+    Test command : pytest test_one_element.py::test_shape_function_4_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos_4 = Points[3]
     shape_4 = shape_function(num_node_elem,gpos_4,elem_coord)
     actual_N_4 = shape_4.get_shape_function()
     expected_N_4 = array([[0.0446582 , 0.16666667, 0.62200847, 0.16666667]])
     assert(array_equiv(np.round(actual_N_4,6),np.round(expected_N_4,6))) is True
 
-def test_shape_function_derivative_true():
+def test_shape_function_derivative_1_true():
     '''
     UNIT TESTING
     Aim: Test shape function derivatives in shape_function class
 
     Expected result : Array of shape function derivative
 
-    Test command : pytest test.py::test_shape_function_derivative_true()
+    Test command : pytest test_one_element.py::test_shape_function_derivative_1_true()
 
     Remarks : test case passed successfully
     '''
@@ -147,13 +186,35 @@ def test_shape_function_derivative_true():
        [-0.78867513, -0.21132487,  0.21132487,  0.78867513]])
     assert(array_equiv(np.round(actual_dNdX_1,6),np.round(expected_dNdX_1,6))) is True
     
+def test_shape_function_derivative_2_true():
+    '''
+    UNIT TESTING
+    Aim: Test shape function derivatives in shape_function class
+
+    Expected result : Array of shape function derivative
+
+    Test command : pytest test_one_element.py::test_shape_function_derivative_2_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos_2 = Points[1]
     shape_2 = shape_function(num_node_elem,gpos_2,elem_coord)
     actual_dNdX_2 = shape_2.get_shape_function_derivative()
     expected_dNdX_2 = array([[-0.21132487,  0.21132487,  0.78867513, -0.78867513],
        [-0.78867513, -0.21132487,  0.21132487,  0.78867513]])
     assert(array_equiv(np.round(actual_dNdX_2,6),np.round(expected_dNdX_2,6))) is True
-    
+
+def test_shape_function_derivative_3_true():
+    '''
+    UNIT TESTING
+    Aim: Test shape function derivatives in shape_function class
+
+    Expected result : Array of shape function derivative
+
+    Test command : pytest test_one_element.py::test_shape_function_derivative_3_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos_3 = Points[2]
     shape_3 = shape_function(num_node_elem,gpos_3,elem_coord)
     actual_dNdX_3 = shape_3.get_shape_function_derivative()
@@ -161,21 +222,32 @@ def test_shape_function_derivative_true():
        [-0.21132487, -0.78867513,  0.78867513,  0.21132487]])
     assert(array_equiv(np.round(actual_dNdX_3,6),np.round(expected_dNdX_3,6))) is True
     
+def test_shape_function_derivative_4_true():
+    '''
+    UNIT TESTING
+    Aim: Test shape function derivatives in shape_function class
+
+    Expected result : Array of shape function derivative
+
+    Test command : pytest test_one_element.py::test_shape_function_derivative_4_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos_4 = Points[3]
     shape_4 = shape_function(num_node_elem,gpos_4,elem_coord)
     actual_dNdX_4 = shape_4.get_shape_function_derivative()
     expected_dNdX_4 = array([[-0.21132487,  0.21132487,  0.78867513, -0.78867513],
        [-0.21132487, -0.78867513,  0.78867513,  0.21132487]])
     assert(array_equiv(np.round(actual_dNdX_4,6),np.round(expected_dNdX_4,6))) is True
-
-def test_det_Jacobian_true():
+    
+def test_det_Jacobian_1_true():
     '''
     UNIT TESTING
     Aim: Test determinant of Jacobian in shape_function class
 
     Expected result : Determinant of a Jacobian
 
-    Test command : pytest test.py::test_det_Jacobian_true()
+    Test command : pytest test_one_element.py::test_det_Jacobian_1_true()
 
     Remarks : test case passed successfully
     '''
@@ -185,23 +257,90 @@ def test_det_Jacobian_true():
     expected_det_Jacobian = 0.25
     assert(array_equiv(actual_det_Jacobian,expected_det_Jacobian)) is True
     
+def test_det_Jacobian_2_true():
+    '''
+    UNIT TESTING
+    Aim: Test determinant of Jacobian in shape_function class
+
+    Expected result : Determinant of a Jacobian
+
+    Test command : pytest test_one_element.py::test_det_Jacobian_2_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos = Points[1]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     actual_det_Jacobian = shape.get_det_Jacobian()
     expected_det_Jacobian = 0.25
     assert(array_equiv(actual_det_Jacobian,expected_det_Jacobian)) is True
     
+def test_det_Jacobian_3_true():
+    '''
+    UNIT TESTING
+    Aim: Test determinant of Jacobian in shape_function class
+
+    Expected result : Determinant of a Jacobian
+
+    Test command : pytest test_one_element.py::test_det_Jacobian_3_true()
+
+    Remarks : test case passed successfully
+    '''    
     gpos = Points[2]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     actual_det_Jacobian = shape.get_det_Jacobian()
     expected_det_Jacobian = 0.25
     assert(array_equiv(actual_det_Jacobian,expected_det_Jacobian)) is True
     
+def test_det_Jacobian_4_true():
+    '''
+    UNIT TESTING
+    Aim: Test determinant of Jacobian in shape_function class
+
+    Expected result : Determinant of a Jacobian
+
+    Test command : pytest test_one_element.py::test_det_Jacobian_4_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos = Points[3]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     actual_det_Jacobian = shape.get_det_Jacobian()
     expected_det_Jacobian = 0.25
     assert(array_equiv(actual_det_Jacobian,expected_det_Jacobian)) is True
+
+def test_det_Jacobian_equal_true():
+    '''
+    UNIT TESTING
+    Aim: Test determinant of Jacobian, determinant should be same for all Gauss points in shape_function class
+
+    Expected result : Determinant of a Jacobian equal for all Gauss points
+
+    Test command : pytest test_one_element.py::test_det_Jacobian_equal_true()
+
+    Remarks : test case passed successfully
+    '''
+    gpos_1 = Points[0]
+    shape_1 = shape_function(num_node_elem,gpos_1,elem_coord)
+    actual_det_Jacobian_1 = shape_1.get_det_Jacobian()
+
+    gpos_2 = Points[1]
+    shape_2 = shape_function(num_node_elem,gpos_2,elem_coord)
+    actual_det_Jacobian_2 = shape_2.get_det_Jacobian()
+
+    gpos_3 = Points[2]
+    shape_3 = shape_function(num_node_elem,gpos_3,elem_coord)
+    actual_det_Jacobian_3 = shape_3.get_det_Jacobian()
+
+    gpos_4 = Points[3]
+    shape_4 = shape_function(num_node_elem,gpos_4,elem_coord)
+    actual_det_Jacobian_4 = shape_4.get_det_Jacobian()
+    expected_det_Jacobian = 0.25
+    
+    assert(array_equiv(actual_det_Jacobian_1, actual_det_Jacobian_2)) is True
+    assert(array_equiv(actual_det_Jacobian_2, actual_det_Jacobian_3)) is True     
+    assert(array_equiv(actual_det_Jacobian_3, actual_det_Jacobian_4)) is True
+    assert(array_equiv(actual_det_Jacobian_4, actual_det_Jacobian_1)) is True  
+    assert(array_equiv(actual_det_Jacobian_1, expected_det_Jacobian)) is True  
     
 def test_element_area_true():
     '''
@@ -210,7 +349,7 @@ def test_element_area_true():
 
     Expected result : Area of an element
 
-    Test command : pytest test.py::test_element_area_true()
+    Test command : pytest test_one_element.py::test_element_area_true()
 
     Remarks : test case passed successfully
     '''
@@ -224,14 +363,14 @@ def test_element_area_true():
 
     assert(array_equiv(actual_area,expected_area)) is True
     
-def test_B_matrix_phasefield_true():
+def test_B_matrix_phasefield_1_true():
     '''
     UNIT TESTING
     Aim: Test B matrix for fiels order parameter which is derivative of shape function
 
     Expected result : Array of B matrix
 
-    Test command : pytest test.py::test_B_matrix_phasefield_true()
+    Test command : pytest test_one_element.py::test_B_matrix_phasefield_1_true()
 
     Remarks : test case passed successfully
     '''
@@ -244,6 +383,17 @@ def test_B_matrix_phasefield_true():
        [-0.78867513, -0.21132487,  0.21132487,  0.78867513]])
     assert(array_equiv(np.round(actual_Bmat,6),np.round(expected_Bmat,6))) is True
     
+def test_B_matrix_phasefield_2_true():
+    '''
+    UNIT TESTING
+    Aim: Test B matrix for fiels order parameter which is derivative of shape function
+
+    Expected result : Array of B matrix
+
+    Test command : pytest test_one_element.py::test_B_matrix_phasefield_2_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos = Points[1]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     dNdX = shape.get_shape_function_derivative()
@@ -253,6 +403,17 @@ def test_B_matrix_phasefield_true():
        [-0.78867513, -0.21132487,  0.21132487,  0.78867513]])
     assert(array_equiv(np.round(actual_Bmat,6),np.round(expected_Bmat,6))) is True
     
+def test_B_matrix_phasefield_3_true():
+    '''
+    UNIT TESTING
+    Aim: Test B matrix for fiels order parameter which is derivative of shape function
+
+    Expected result : Array of B matrix
+
+    Test command : pytest test_one_element.py::test_B_matrix_phasefield_3_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos = Points[2]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     dNdX = shape.get_shape_function_derivative()
@@ -262,6 +423,17 @@ def test_B_matrix_phasefield_true():
        [-0.21132487, -0.78867513,  0.78867513,  0.21132487]])
     assert(array_equiv(np.round(actual_Bmat,6),np.round(expected_Bmat,6))) is True
     
+def test_B_matrix_phasefield_4_true():
+    '''
+    UNIT TESTING
+    Aim: Test B matrix for fiels order parameter which is derivative of shape function
+
+    Expected result : Array of B matrix
+
+    Test command : pytest test_one_element.py::test_B_matrix_phasefield_4_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos = Points[3]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     dNdX = shape.get_shape_function_derivative()
@@ -278,7 +450,7 @@ def test_stiffness_phasefield_true():
 
     Expected result : Array of stiffness matrix for phase field order parameter
 
-    Test command : pytest test.py::test_stiffness_phasefield_true()
+    Test command : pytest test_one_element.py::test_stiffness_phasefield_true()
 
     Remarks : test case passed successfully
     '''
@@ -289,7 +461,6 @@ def test_stiffness_phasefield_true():
        [3.732, 1.839, 3.732, 7.572]])
     assert(array_equiv(np.round(actual_K_phiphi,6),np.round(expected_K_phiphi,6))) is True
 
-
 def test_eigen_values_stiffness_phasefield_positive_true():
     '''
     UNIT TESTING
@@ -297,7 +468,7 @@ def test_eigen_values_stiffness_phasefield_positive_true():
 
     Expected result : Array of sign of eigen values
 
-    Test command : pytest test.py::test_eigen_values_stiffness_phasefield_positive_true()
+    Test command : pytest test_one_element.py::test_eigen_values_stiffness_phasefield_positive_true()
 
     Remarks : test case passed successfully
     '''
@@ -321,14 +492,14 @@ def test_stiffness_phasefield_symmetry():
     expected_output = True*np.ones(np.shape(actual_K_phiphi))
     assert(array_equiv(actual_output,expected_output)) is True
 
-def test_B_matrix_disp_true():
+def test_B_matrix_disp_1_true():
     '''
     UNIT TESTING
     Aim: Test B matrix for displacement which is the strain displacement connectivity matrix
 
     Expected result : Array of B matrix for displacement
 
-    Test command : pytest test.py::test_B_matrix_true()
+    Test command : pytest test_one_element.py::test_B_matrix_1_true()
 
     Remarks : test case passed successfully
     '''
@@ -342,6 +513,17 @@ def test_B_matrix_disp_true():
        [-0.78867513, -0.78867513, -0.21132487, 0.78867513, 0.21132487, 0.21132487, 0.78867513, -0.21132487]])
     assert(array_equiv(np.round(actual_Bmat,6),np.round(expected_Bmat,6))) is True
     
+def test_B_matrix_disp_2_true():
+    '''
+    UNIT TESTING
+    Aim: Test B matrix for displacement which is the strain displacement connectivity matrix
+
+    Expected result : Array of B matrix for displacement
+
+    Test command : pytest test_one_element.py::test_B_matrix_2_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos = Points[1]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     dNdX = shape.get_shape_function_derivative()
@@ -352,6 +534,17 @@ def test_B_matrix_disp_true():
        [-0.78867513, -0.21132487, -0.21132487, 0.21132487, 0.21132487, 0.78867513, 0.78867513, -0.78867513]])
     assert(array_equiv(np.round(actual_Bmat,6),np.round(expected_Bmat,6))) is True
     
+def test_B_matrix_disp_3_true():
+    '''
+    UNIT TESTING
+    Aim: Test B matrix for displacement which is the strain displacement connectivity matrix
+
+    Expected result : Array of B matrix for displacement
+
+    Test command : pytest test_one_element.py::test_B_matrix_3_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos = Points[2]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     dNdX = shape.get_shape_function_derivative()
@@ -362,6 +555,18 @@ def test_B_matrix_disp_true():
        [-0.21132487, -0.78867513, -0.78867513, 0.78867513, 0.78867513, 0.21132487, 0.21132487, -0.21132487]])
     assert(array_equiv(np.round(actual_Bmat,6),np.round(expected_Bmat,6))) is True
     
+def test_B_matrix_disp_4_true():
+    
+    '''
+    UNIT TESTING
+    Aim: Test B matrix for displacement which is the strain displacement connectivity matrix
+
+    Expected result : Array of B matrix for displacement
+
+    Test command : pytest test_one_element.py::test_B_matrix_4_true()
+
+    Remarks : test case passed successfully
+    '''
     gpos = Points[3]
     shape = shape_function(num_node_elem,gpos,elem_coord)
     dNdX = shape.get_shape_function_derivative()
@@ -371,7 +576,7 @@ def test_B_matrix_disp_true():
        [0, -0.21132487, 0, -0.78867513, 0, 0.78867513, 0, 0.21132487],
        [-0.21132487, -0.21132487, -0.78867513, 0.21132487, 0.78867513, 0.78867513, 0.21132487, -0.78867513]])
     assert(array_equiv(np.round(actual_Bmat,6),np.round(expected_Bmat,6))) is True
-    
+
 def test_stiffness_disp_true():
     '''
     UNIT TESTING
@@ -379,7 +584,7 @@ def test_stiffness_disp_true():
 
     Expected result : Array of stiffness matrix 
 
-    Test command : pytest test.py::test_stiffness_disp_true()
+    Test command : pytest test_one_element.py::test_stiffness_disp_true()
 
     Remarks : test case passed successfully
     '''
@@ -417,7 +622,7 @@ def test_stiffness_disp_symmetry():
 
     Expected result : Array which has size of stiffness matrix consists of all True 
 
-    Test command : pytest test.py::test_element_area_true()
+    Test command : pytest test_one_element.py::test_element_area_true()
 
     Remarks : test case passed successfully
     '''
@@ -432,7 +637,7 @@ def test_eigen_values_stiffness_disp_positive_true():
 
     Expected result : Array of sign of eigen values
 
-    Test command : pytest test.py::test_element_area_true()
+    Test command : pytest test_one_element.py::test_element_area_true()
 
     Remarks : test case passed successfully
     '''
@@ -448,23 +653,90 @@ def test_global_assembly_stiffness_disp_true():
 
     Expected result : Array of global stiffness matrix
 
-    Test command : pytest test.py::test_global_assembly_stiffness_disp_true()
+    Test command : pytest test_one_element.py::test_global_assembly_stiffness_disp_true()
 
     Remarks : test case passed successfully
     '''
     assert(array_equiv(np.round(actual_K_uu,6),np.round(global_K_disp,6))) is True
     
+def test_assmebly_index_disp_true():
+    '''
+    UNIT TESTING
+    Aim: Test indices which assemble global stiffness matrix and global residual vector
 
-test_stiffness_phasefield_true()
-test_stiffness_phasefield_symmetry()
-test_stiffness_disp_true()
-test_eigen_values_stiffness_phasefield_positive_true()
-test_shape_function_true()
-test_shape_function_derivative_true()
-test_det_Jacobian_true()
-test_element_area_true()
-test_B_matrix_phasefield_true()
-test_stiffness_disp_symmetry()
-test_B_matrix_disp_true()
-test_eigen_values_stiffness_disp_positive_true()
-test_global_assembly_stiffness_disp_true()
+    Expected result : Array of indices corresponding to global matrix for displacement field
+
+    Test command : pytest test_one_element.py::test_assmebly_index_disp_true()
+
+    Remarks : test case passed successfully
+    '''
+    assemble = assembly()
+    actual_output = assemble.assembly_index_u(elem, num_dof_u, num_node_elem, elements)
+    expected_output = np.array([0,1,2,3,4,5,6,7])
+    assert(array_equiv(actual_output,expected_output)) is True
+    
+def test_assmebly_index_phasefield_true():
+    '''
+    UNIT TESTING
+    Aim: Test indices which assemble global stiffness matrix and global residual vector
+
+    Expected result : Array of indices corresponding to global matrix for phase field parameter
+
+    Test command : pytest test_one_element.py::test_assmebly_index_disp_true()
+
+    Remarks : test case passed successfully
+    '''
+    assemble = assembly()
+    actual_output = assemble.assembly_index_phi(elem, num_dof_phi, num_node_elem, elements)
+    expected_output = np.array([0,1,2,3])
+    assert(array_equiv(actual_output,expected_output)) is True
+
+def test_material_routine_elastic_true():
+    '''
+    UNIT TESTING
+    Aim: Test material routine for elastic case in material_routine class
+
+    Expected result : Array of stiffness tensor for plane strain case
+
+    Test command : pytest test_one_element.py::test_material_routine_true
+
+    Remarks : test case passed successfully
+    '''
+    Young = 210000
+    Poisson = 0.3
+    actual_C = C
+    expected_C = ((Young)*(1-Poisson))/((1-Poisson*2)*(1+Poisson))*np.array([[1,Poisson/(1-Poisson),0],[Poisson/(1-Poisson),1,0],[0,0,(1-2*Poisson)/(2*(1-Poisson))]])
+    assert (array_equiv(actual_C,expected_C)) is True
+
+# test_stiffness_phasefield_true()
+# test_stiffness_phasefield_symmetry()
+# test_stiffness_disp_true()
+# test_eigen_values_stiffness_phasefield_positive_true()
+# test_shape_function_1_true()
+# test_shape_function_2_true()
+# test_shape_function_3_true()
+# test_shape_function_4_true()
+# test_shape_function_derivative_1_true()
+# test_shape_function_derivative_2_true()
+# test_shape_function_derivative_3_true()
+# test_shape_function_derivative_4_true()
+# test_det_Jacobian_1_true()
+# test_det_Jacobian_2_true()
+# test_det_Jacobian_3_true()
+# test_det_Jacobian_4_true()
+# test_det_Jacobian_equal_true
+# test_element_area_true()
+# test_B_matrix_phasefield_1_true()
+# test_B_matrix_phasefield_2_true()
+# test_B_matrix_phasefield_3_true()
+# test_B_matrix_phasefield_4_true()
+# test_stiffness_disp_symmetry()
+# test_B_matrix_disp_1_true()
+# test_B_matrix_disp_2_true()
+# test_B_matrix_disp_3_true()
+# test_B_matrix_disp_4_true()
+# test_eigen_values_stiffness_disp_positive_true()
+# test_global_assembly_stiffness_disp_true()
+# test_assmebly_index_disp_true()
+# test_assmebly_index_phasefield_true()
+# test_material_routine_elastic_true()

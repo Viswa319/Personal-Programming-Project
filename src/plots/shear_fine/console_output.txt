@@ -1,0 +1,587 @@
+Solving for phase field: Iteration ---> 1 --- norm = 4.3284289366308265e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0003893802158662228 and norm_2 = 0.008652201919066637
+Displacement solution converged!!!
+step time: 226.31578731536865
+step: 72
+Solving for phase field: Iteration ---> 1 --- norm = 4.3602012842024255e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.251000078211703 and norm_2 = 0.013022342708875935
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.251011953658058 and norm_2 = 0.013146007123652294
+Solving for displacement: Iteration ---> 3 --- norm_1 = 2.778214232366183e-12 and norm_2 = 0.008899170950879685
+Displacement solution converged!!!
+step time: 612.3756968975067
+step: 73
+Solving for phase field: Iteration ---> 1 --- norm = 4.516299900737302e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.00041217074008494174 and norm_2 = 0.008899063628708306
+Displacement solution converged!!!
+step time: 226.2810926437378
+step: 74
+Solving for phase field: Iteration ---> 1 --- norm = 4.572710768356719e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.250629654556993 and norm_2 = 0.01326909714157495
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.250642019871583 and norm_2 = 0.013392759639972381
+Solving for displacement: Iteration ---> 3 --- norm_1 = 2.8760067665532744e-12 and norm_2 = 0.009146008633393014
+Displacement solution converged!!!
+step time: 612.3643431663513
+step: 75
+Solving for phase field: Iteration ---> 1 --- norm = 4.83806765417262e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.00043561511663437505 and norm_2 = 0.009145895953866645
+Displacement solution converged!!!
+step time: 226.29138135910034
+step: 76
+Solving for phase field: Iteration ---> 1 --- norm = 4.747958531498406e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.250253772495272 and norm_2 = 0.013515819873029808
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.25026663593736 and norm_2 = 0.013639480373463351
+Solving for displacement: Iteration ---> 3 --- norm_1 = 2.922007265194414e-12 and norm_2 = 0.009392816221829567
+Displacement solution converged!!!
+step time: 613.313107252121
+step: 77
+Solving for phase field: Iteration ---> 1 --- norm = 5.110750128923464e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.00045971396154077994 and norm_2 = 0.009392698057293725
+Displacement solution converged!!!
+step time: 226.2968008518219
+step: 78
+Solving for phase field: Iteration ---> 1 --- norm = 5.069464531775257e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.24987243398491 and norm_2 = 0.013762510066677431
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.249885803802979 and norm_2 = 0.013886168486974276
+Solving for displacement: Iteration ---> 3 --- norm_1 = 2.9580520264958106e-12 and norm_2 = 0.009639592878236746
+Displacement solution converged!!!
+step time: 613.1993441581726
+step: 79
+Solving for phase field: Iteration ---> 1 --- norm = 5.173990899201731e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0004844679126282885 and norm_2 = 0.009639469101122827
+Displacement solution converged!!!
+step time: 226.32394981384277
+step: 80
+Solving for phase field: Iteration ---> 1 --- norm = 5.088981779448869e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.249485641030349 and norm_2 = 0.014009166885352418
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.249499525461452 and norm_2 = 0.014132823142734853
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.0502290540745207e-12 and norm_2 = 0.009886337764021686
+Displacement solution converged!!!
+step time: 613.2407355308533
+step: 81
+Solving for phase field: Iteration ---> 1 --- norm = 5.427812275796017e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0005098776298731448 and norm_2 = 0.009886208246849252
+Displacement solution converged!!!
+step time: 226.29988431930542
+step: 82
+Solving for phase field: Iteration ---> 1 --- norm = 5.352252483769583e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.249093395682232 and norm_2 = 0.014255789491268319
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.24910780295168 and norm_2 = 0.014379443502337044
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.0636466609198127e-12 and norm_2 = 0.010133050039932092
+Displacement solution converged!!!
+step time: 612.4270358085632
+step: 83
+Solving for phase field: Iteration ---> 1 --- norm = 5.718029775206379e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0005359437957788687 and norm_2 = 0.010132914655311742
+Displacement solution converged!!!
+step time: 226.85116934776306
+step: 84
+Solving for phase field: Iteration ---> 1 --- norm = 5.565163726900293e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.248695700036835 and norm_2 = 0.014502377045998318
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.248710638358492 and norm_2 = 0.014626028726715768
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.0911456860845786e-12 and norm_2 = 0.010379728866037153
+Displacement solution converged!!!
+step time: 611.6499481201172
+step: 85
+Solving for phase field: Iteration ---> 1 --- norm = 5.913891537196461e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.000562667115712338 and norm_2 = 0.01037958748667262
+Displacement solution converged!!!
+step time: 226.28762531280518
+step: 86
+Solving for phase field: Iteration ---> 1 --- norm = 5.782544965912535e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.24829255623693 and norm_2 = 0.01474892871045644
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.248308033812254 and norm_2 = 0.014872577976129212
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.126920552581113e-12 and norm_2 = 0.010626373401708246
+Displacement solution converged!!!
+step time: 613.1844818592072
+step: 87
+Solving for phase field: Iteration ---> 1 --- norm = 6.072101131916146e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0005900483183258014 and norm_2 = 0.010626225900399206
+Displacement solution converged!!!
+step time: 226.30653738975525
+step: 88
+Solving for phase field: Iteration ---> 1 --- norm = 6.094341389961811e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.247883966471372 and norm_2 = 0.014995443644877716
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.247899991489534 and norm_2 = 0.015119090410140092
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.163706858521019e-12 and norm_2 = 0.010872982805599389
+Displacement solution converged!!!
+step time: 613.2225458621979
+step: 89
+Solving for phase field: Iteration ---> 1 --- norm = 6.517242401705332e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0006180881559047179 and norm_2 = 0.01087282905524383
+Displacement solution converged!!!
+step time: 226.31424117088318
+step: 90
+Solving for phase field: Iteration ---> 1 --- norm = 6.380122342636233e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.247469932975253 and norm_2 = 0.015241921008798665
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.247486513612794 and norm_2 = 0.015365565187595567
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.1952758553604867e-12 and norm_2 = 0.011119556235627557
+Displacement solution converged!!!
+step time: 612.3206520080566
+step: 91
+Solving for phase field: Iteration ---> 1 --- norm = 6.812302137717972e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0006467874048080544 and norm_2 = 0.011119396109224345
+Displacement solution converged!!!
+step time: 226.4130916595459
+step: 92
+Solving for phase field: Iteration ---> 1 --- norm = 6.78605945771653e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.247050458029978 and norm_2 = 0.015488359961038168
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.247067602450674 and norm_2 = 0.015612001466607874
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.2463439326199098e-12 and norm_2 = 0.011366092848953036
+Displacement solution converged!!!
+step time: 613.5652756690979
+step: 93
+Solving for phase field: Iteration ---> 1 --- norm = 7.373393766047548e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0006761468658766504 and norm_2 = 0.01136592621960466
+Displacement solution converged!!!
+step time: 226.44545149803162
+step: 94
+Solving for phase field: Iteration ---> 1 --- norm = 7.16043428241875e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.246625543963479 and norm_2 = 0.015734759659677185
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.246643260317853 and norm_2 = 0.015858398404533864
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.2626808537358204e-12 and norm_2 = 0.011612591801959227
+Displacement solution converged!!!
+step time: 612.647697687149
+step: 95
+Solving for phase field: Iteration ---> 1 --- norm = 7.580325380208344e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0007061673648245171 and norm_2 = 0.011612418542874129
+Displacement solution converged!!!
+step time: 226.50238227844238
+step: 96
+Solving for phase field: Iteration ---> 1 --- norm = 7.468735883244431e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.246195193150227 and norm_2 = 0.015981119262038854
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.246213489575299 and norm_2 = 0.016104755157955463
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.2852769346465352e-12 and norm_2 = 0.011859052250232939
+Displacement solution converged!!!
+step time: 612.6922903060913
+step: 97
+Solving for phase field: Iteration ---> 1 --- norm = 7.699654612073817e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0007368497527599214 and norm_2 = 0.01185887223472816
+Displacement solution converged!!!
+step time: 226.41097974777222
+step: 98
+Solving for phase field: Iteration ---> 1 --- norm = 7.869058991992804e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.245759408010992 and norm_2 = 0.016227437924667944
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.245778292630284 and norm_2 = 0.01635107088265895
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.357573467275114e-12 and norm_2 = 0.012105473348543045
+Displacement solution converged!!!
+step time: 612.7012712955475
+step: 99
+Solving for phase field: Iteration ---> 1 --- norm = 8.253426757171293e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0007681949065855164 and norm_2 = 0.012105286450047093
+Displacement solution converged!!!
+step time: 226.32963275909424
+step: 100
+Solving for phase field: Iteration ---> 1 --- norm = 8.156066376759424e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.245318191013492 and norm_2 = 0.016473714803311574
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.245337671936426 and norm_2 = 0.01659734473361455
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.487325364981314e-12 and norm_2 = 0.012351854250821276
+Displacement solution converged!!!
+step time: 613.2544364929199
+step: 101
+Solving for phase field: Iteration ---> 1 --- norm = 8.400632516687153e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0008002037294768298 and norm_2 = 0.01235166034287627
+Displacement solution converged!!!
+step time: 227.16095995903015
+step: 102
+Solving for phase field: Iteration ---> 1 --- norm = 8.338422737977255e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.24487154467193 and norm_2 = 0.01671994905289693
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.244891629993838 and norm_2 = 0.016843575864956408
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.57262591405472e-12 and norm_2 = 0.012598194110140806
+Displacement solution converged!!!
+step time: 612.9028482437134
+step: 103
+Solving for phase field: Iteration ---> 1 --- norm = 8.79612723825361e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.000832877151314848 and norm_2 = 0.012597993066405395
+Displacement solution converged!!!
+step time: 227.0540063381195
+step: 104
+Solving for phase field: Iteration ---> 1 --- norm = 8.543785645946033e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.244419471547696 and norm_2 = 0.01696613982751225
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.24444016934921 and norm_2 = 0.01708976342996076
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.7038297428895464e-12 and norm_2 = 0.01284449207869493
+Displacement solution converged!!!
+step time: 613.6821284294128
+step: 105
+Solving for phase field: Iteration ---> 1 --- norm = 9.001095586168268e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0008662161295471233 and norm_2 = 0.01284428377294691
+Displacement solution converged!!!
+step time: 226.70764470100403
+step: 106
+Solving for phase field: Iteration ---> 1 --- norm = 8.951792339708229e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.243961974248736 and norm_2 = 0.017212286280384688
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.243983292595814 and norm_2 = 0.017335906581025583
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.8094009123444945e-12 and norm_2 = 0.013090747307776889
+Displacement solution converged!!!
+step time: 613.24138879776
+step: 107
+Solving for phase field: Iteration ---> 1 --- norm = 9.369510817111915e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0009002216489560076 and norm_2 = 0.01309053161391592
+Displacement solution converged!!!
+step time: 226.75740718841553
+step: 108
+Solving for phase field: Iteration ---> 1 --- norm = 9.261369108457543e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.243499055429876 and norm_2 = 0.01745838756385966
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.243521002373662 and norm_2 = 0.01758200446964934
+Solving for displacement: Iteration ---> 3 --- norm_1 = 3.902335139067264e-12 and norm_2 = 0.013336958947758135
+Displacement solution converged!!!
+step time: 614.0757610797882
+step: 109
+Solving for phase field: Iteration ---> 1 --- norm = 9.527797317543118e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0009348947226437202 and norm_2 = 0.013336735739808123
+Displacement solution converged!!!
+step time: 226.77367305755615
+step: 110
+Solving for phase field: Iteration ---> 1 --- norm = 9.614764361933986e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.243030717793548 and norm_2 = 0.017704442829379233
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.243053301369503 and norm_2 = 0.017828056246408805
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.002415128231293e-12 and norm_2 = 0.013583126148066536
+Displacement solution converged!!!
+step time: 612.2216529846191
+step: 111
+Solving for phase field: Iteration ---> 1 --- norm = 9.905738134858565e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.000970236392661146 and norm_2 = 0.013582895300178666
+Displacement solution converged!!!
+step time: 226.77931833267212
+step: 112
+Solving for phase field: Iteration ---> 1 --- norm = 9.925758275892775e-19
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.242556964088921 and norm_2 = 0.017950451227460827
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.242580192317234 and norm_2 = 0.01807406106093798
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.118609405300531e-12 and norm_2 = 0.01382924805716458
+Displacement solution converged!!!
+step time: 612.2355992794037
+step: 113
+Solving for phase field: Iteration ---> 1 --- norm = 1.0113592391672397e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.001006247730985015 and norm_2 = 0.013829009443619826
+Displacement solution converged!!!
+step time: 226.8389654159546
+step: 114
+Solving for phase field: Iteration ---> 1 --- norm = 1.0081847411871055e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.242077797112461 and norm_2 = 0.01819641190767554
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.242101677997368 and norm_2 = 0.018320018061906664
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.196579853361225e-12 and norm_2 = 0.01407532382252843
+Displacement solution converged!!!
+step time: 612.2291889190674
+step: 115
+Solving for phase field: Iteration ---> 1 --- norm = 1.0545537547933446e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0010429298383122082 and norm_2 = 0.014075077317740246
+Displacement solution converged!!!
+step time: 226.67300748825073
+step: 116
+Solving for phase field: Iteration ---> 1 --- norm = 1.0212981247156261e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.241593219708133 and norm_2 = 0.018442324018625274
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.241617761237807 and norm_2 = 0.018565926396997282
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.2930469653903206e-12 and norm_2 = 0.014321352590624564
+Displacement solution converged!!!
+step time: 612.1782150268555
+step: 117
+Solving for phase field: Iteration ---> 1 --- norm = 1.0782792246350712e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0010802838463832083 and norm_2 = 0.014321098069141652
+Displacement solution converged!!!
+step time: 226.7137725353241
+step: 118
+Solving for phase field: Iteration ---> 1 --- norm = 1.0594835953255749e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.241103234767275 and norm_2 = 0.01868818670792165
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.24112844491346 and norm_2 = 0.018811785212883198
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.348896713303682e-12 and norm_2 = 0.014567333506887846
+Displacement solution converged!!!
+step time: 612.1890513896942
+step: 119
+Solving for phase field: Iteration ---> 1 --- norm = 1.1011172062673916e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0011183109180592564 and norm_2 = 0.014567070843397083
+Displacement solution converged!!!
+step time: 226.7108235359192
+step: 120
+Solving for phase field: Iteration ---> 1 --- norm = 1.1084465185614626e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.240607845228672 and norm_2 = 0.018933999122162405
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.240633731946563 and norm_2 = 0.019057593655205582
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.436688255654299e-12 and norm_2 = 0.014813265715698467
+Displacement solution converged!!!
+step time: 613.2552115917206
+step: 121
+Solving for phase field: Iteration ---> 1 --- norm = 1.1503217606626584e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0011570122478620783 and norm_2 = 0.014812994785027334
+Displacement solution converged!!!
+step time: 226.80425119400024
+step: 122
+Solving for phase field: Iteration ---> 1 --- norm = 1.1429064282388378e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.240107054079111 and norm_2 = 0.019179760406909763
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.240133625306864 and norm_2 = 0.019303350868551183
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.503167494084114e-12 and norm_2 = 0.015059148360359705
+Displacement solution converged!!!
+step time: 613.3127059936523
+step: 123
+Solving for phase field: Iteration ---> 1 --- norm = 1.1848447127544943e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0011963890625950075 and norm_2 = 0.015058869037479395
+Displacement solution converged!!!
+step time: 226.7903869152069
+step: 124
+Solving for phase field: Iteration ---> 1 --- norm = 1.177860817430253e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.239600864352765 and norm_2 = 0.019425469706666393
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.239628128011333 and norm_2 = 0.019549055996428855
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.6011006500373e-12 and norm_2 = 0.015304980583073882
+Displacement solution converged!!!
+step time: 612.4776730537415
+step: 125
+Solving for phase field: Iteration ---> 1 --- norm = 1.2181942395848716e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0012364426220534401 and norm_2 = 0.015304692743101858
+Displacement solution converged!!!
+step time: 226.83175349235535
+step: 126
+Solving for phase field: Iteration ---> 1 --- norm = 1.2284763396931707e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.239089279131921 and norm_2 = 0.019671126164852826
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.23911724312459 and norm_2 = 0.01979470818124583
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.734136750635163e-12 and norm_2 = 0.015550761524919856
+Displacement solution converged!!!
+step time: 612.4502234458923
+step: 127
+Solving for phase field: Iteration ---> 1 --- norm = 1.3028269054995654e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0012771742195825128 and norm_2 = 0.015550465043122647
+Displacement solution converged!!!
+step time: 226.8288402557373
+step: 128
+Solving for phase field: Iteration ---> 1 --- norm = 1.3081496574050523e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.23857230154642 and norm_2 = 0.019916728923783784
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.238600973759384 and norm_2 = 0.02004030656428518
+Solving for displacement: Iteration ---> 3 --- norm_1 = 4.811279552467178e-12 and norm_2 = 0.015796490325828284
+Displacement solution converged!!!
+step time: 612.4814369678497
+step: 129
+Solving for phase field: Iteration ---> 1 --- norm = 1.3438759089594403e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0013185851828114172 and norm_2 = 0.015796185077624886
+Displacement solution converged!!!
+step time: 226.802561044693
+step: 130
+Solving for phase field: Iteration ---> 1 --- norm = 1.3323364727771735e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.238049934774788 and norm_2 = 0.02016227712464439
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.238079323075507 and norm_2 = 0.02028585028568083
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.011520416379427e-12 and norm_2 = 0.016042166124558797
+Displacement solution converged!!!
+step time: 613.9971950054169
+step: 131
+Solving for phase field: Iteration ---> 1 --- norm = 1.3822790421530174e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0013606768742745851 and norm_2 = 0.01604185198552256
+Displacement solution converged!!!
+step time: 226.8039631843567
+step: 132
+Solving for phase field: Iteration ---> 1 --- norm = 1.3753828543002312e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.237522182043348 and norm_2 = 0.02040776990746612
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.237552294281175 and norm_2 = 0.02053133848439386
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.096835331232539e-12 and norm_2 = 0.016287788058674445
+Displacement solution converged!!!
+step time: 612.9682829380035
+step: 133
+Solving for phase field: Iteration ---> 1 --- norm = 1.473657054065874e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.00140345069217404 and norm_2 = 0.01628746490453666
+Displacement solution converged!!!
+step time: 226.70174646377563
+step: 134
+Solving for phase field: Iteration ---> 1 --- norm = 1.4524196133481602e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.23698904662672 and norm_2 = 0.0206532064111026
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.237019890632595 and norm_2 = 0.020776770298187787
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.159727724797241e-12 and norm_2 = 0.01653335526451836
+Displacement solution converged!!!
+step time: 613.9632997512817
+step: 135
+Solving for phase field: Iteration ---> 1 --- norm = 1.5052165792172165e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0014469080710411385 and norm_2 = 0.016533022971171
+Displacement solution converged!!!
+step time: 227.1007251739502
+step: 136
+Solving for phase field: Iteration ---> 1 --- norm = 1.4703648806935422e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.236450531848332 and norm_2 = 0.020898585773204678
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.236482115433898 and norm_2 = 0.021022144863604243
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.1790664837987065e-12 and norm_2 = 0.0167788668771881
+Displacement solution converged!!!
+step time: 614.1427175998688
+step: 137
+Solving for phase field: Iteration ---> 1 --- norm = 1.5180469045868176e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0014910504825124164 and norm_2 = 0.016778525320686796
+Displacement solution converged!!!
+step time: 226.72227215766907
+step: 138
+Solving for phase field: Iteration ---> 1 --- norm = 1.5425752760164487e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.235906641079564 and norm_2 = 0.021143907130195896
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.235938972037742 and norm_2 = 0.021267461315937545
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.319573539305943e-12 and norm_2 = 0.017024322030510564
+Displacement solution converged!!!
+step time: 613.5216763019562
+step: 139
+Solving for phase field: Iteration ---> 1 --- norm = 1.5622139267659347e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0015358794360548441 and norm_2 = 0.01702397108707716
+Displacement solution converged!!!
+step time: 227.03348422050476
+step: 140
+Solving for phase field: Iteration ---> 1 --- norm = 1.5788728338334655e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.235357377740717 and norm_2 = 0.021389169617246948
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.235390463845036 and norm_2 = 0.021512718789209507
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.348254676557113e-12 and norm_2 = 0.017269719857017356
+Displacement solution converged!!!
+step time: 614.2958273887634
+step: 141
+Solving for phase field: Iteration ---> 1 --- norm = 1.6323660288532547e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0015813964797052123 and norm_2 = 0.017269359403043298
+Displacement solution converged!!!
+step time: 226.91221261024475
+step: 142
+Solving for phase field: Iteration ---> 1 --- norm = 1.62958142189982e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.23480274530105 and norm_2 = 0.02163437236825016
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.23483659430497 and norm_2 = 0.021757916416143344
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.468267911616394e-12 and norm_2 = 0.017515059487917806
+Displacement solution converged!!!
+step time: 612.254145860672
+step: 143
+Solving for phase field: Iteration ---> 1 --- norm = 1.669975862433878e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0016276032009500537 and norm_2 = 0.0175146893999671
+Displacement solution converged!!!
+step time: 226.62311935424805
+step: 144
+Solving for phase field: Iteration ---> 1 --- norm = 1.677867212847776e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.234242747278781 and norm_2 = 0.021879514515794264
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.234277366915823 and norm_2 = 0.022003053328138213
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.526783012328352e-12 and norm_2 = 0.017760340053073528
+Displacement solution converged!!!
+step time: 612.2360579967499
+step: 145
+Solving for phase field: Iteration ---> 1 --- norm = 1.658032935135229e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0016745012273930743 and norm_2 = 0.01775996020788527
+Displacement solution converged!!!
+step time: 226.77329087257385
+step: 146
+Solving for phase field: Iteration ---> 1 --- norm = 1.6668252273096331e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.233677387240576 and norm_2 = 0.022124595191137325
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.23371278522433 and norm_2 = 0.022248128655243046
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.615828027115631e-12 and norm_2 = 0.01800556068097246
+Displacement solution converged!!!
+step time: 613.1326072216034
+step: 147
+Solving for phase field: Iteration ---> 1 --- norm = 1.7307504966052586e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0017220922277133702 and norm_2 = 0.01800517095546434
+Displacement solution converged!!!
+step time: 226.7508988380432
+step: 148
+Solving for phase field: Iteration ---> 1 --- norm = 1.7512292022508468e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.23310666880295 and norm_2 = 0.02236961352418053
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.23314285282615 and norm_2 = 0.022493141526129322
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.725318339113837e-12 and norm_2 = 0.01825072049870078
+Displacement solution converged!!!
+step time: 613.9358537197113
+step: 149
+Solving for phase field: Iteration ---> 1 --- norm = 1.8034431351108887e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0017703779123894228 and norm_2 = 0.018250320769972017
+Displacement solution converged!!!
+step time: 226.7269253730774
+step: 150
+Solving for phase field: Iteration ---> 1 --- norm = 1.745531320633643e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.232530595631383 and norm_2 = 0.022614568643441926
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.232567573365973 and norm_2 = 0.022738091068063727
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.736524162747614e-12 and norm_2 = 0.018495818631917148
+Displacement solution converged!!!
+step time: 614.6538362503052
+step: 151
+Solving for phase field: Iteration ---> 1 --- norm = 1.839635124523354e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.0018193600346335709 and norm_2 = 0.01849540877725148
+Displacement solution converged!!!
+step time: 227.48009133338928
+step: 152
+Solving for phase field: Iteration ---> 1 --- norm = 1.7956788243970625e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.23194917144086 and norm_2 = 0.02285945967602853
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.231986950537632 and norm_2 = 0.02298297640688123
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.791990687000513e-12 and norm_2 = 0.01874085420482382
+Displacement solution converged!!!
+step time: 615.3691849708557
+step: 153
+Solving for phase field: Iteration ---> 1 --- norm = 1.8567108002769794e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 0.001869040392309931 and norm_2 = 0.0187404341016927
+Displacement solution converged!!!
+step time: 227.5364215373993
+step: 154
+Solving for phase field: Iteration ---> 1 --- norm = 1.8728139441748065e-18
+Phase field solution converged!!!
+Solving for displacement: Iteration ---> 1 --- norm_1 = 11.231362399995948 and norm_2 = 0.023104285747608887
+Solving for displacement: Iteration ---> 2 --- norm_1 = 11.231400988084415 and norm_2 = 0.023227796666958293
+Solving for displacement: Iteration ---> 3 --- norm_1 = 5.929466888770799e-12 and norm_2 = 0.018985826340140836
+Displacement solution converged!!!
+step time: 614.735157251358

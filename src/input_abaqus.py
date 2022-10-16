@@ -9,8 +9,9 @@ import numpy as np
 class input_parameters():
     """Input parameters class where all inputs are defined. 
     Four different functions are implemented based on the input type."""
-    def __init__(self):
-        pass
+    def __init__(self,load_type, problem):
+        self.load_type = load_type
+        self.problem = problem
     
     def geometry_parameters(self):
         """
@@ -47,43 +48,49 @@ class input_parameters():
         # number of nodes per element
         num_node_elem = 4
         
-        # with open('0_008.inp', "r") as f:
+        if self.load_type == 0:
+            file_name = 'tensile.inp'
+        elif self.load_type == 1:
+            # file_name = 'shear_coarse.inp'
+            file_name = 'shear_fine.inp'
         
-        #     lines = f.readlines()
-        #     # number of nodes
-        #     for i in range(len(lines)):
-        #         if lines[i] == "*Nset, nset=Set-1, generate\n":
-        #             num_node = int((lines[i + 1].split(',')[1]))
+        with open(file_name, "r") as f:
+        
+            lines = f.readlines()
+            # number of nodes
+            for i in range(len(lines)):
+                if lines[i] == "*Nset, nset=Set-1, generate\n":
+                    num_node = int((lines[i + 1].split(',')[1]))
                 
-        #         if lines[i] == "*Node\n":
-        #             start_node = i + 1
+                if lines[i] == "*Node\n":
+                    start_node = i + 1
                 
-        #         # if lines[i] == "*ELEMENT, TYPE=U1, ELSET=SOLID\n":
-        #         if lines[i] == "*Element, type=S4R\n":
-        #             start_elem = i + 1
+                if lines[i] == "*Elset, elset=Set-1, generate\n":
+                    num_elem = int((lines[i + 1].split(',')[1]))
+                    break
                 
-        #         if lines[i] == "*Elset, elset=Set-1, generate\n":
-        #             num_elem = int((lines[i + 1].split(',')[1]))
-        #             break
+                if lines[i] == "*Element\n":
+                    start_elem = i + 1
+                
         
-        #     # extracting nodes from input file
-        #     nodes = np.zeros((num_node, num_dim), float)
-        #     for i in range(start_node, start_node + num_node):
-        #         nodes[i - start_node, 0] = (lines[i].split(','))[1]
-        #         nodes[i - start_node, 1] = (lines[i].split(','))[2]
+            # extracting nodes from input file
+            nodes = np.zeros((num_node, num_dim), float)
+            for i in range(start_node, start_node + num_node):
+                nodes[i - start_node, 0] = (lines[i].split(','))[1]
+                nodes[i - start_node, 1] = (lines[i].split(','))[2]
         
         
-        #     # extracting elements and material type of each element from input file
-        #     elements = np.zeros((num_elem, num_node_elem), int)
-        #     for i in range(start_elem, start_elem + num_elem):
-        #         elements[i - start_elem, 0:num_node_elem] = (lines[i].split(','))[1:num_node_elem + 1]
+            # extracting elements and material type of each element from input file
+            elements = np.zeros((num_elem, num_node_elem), int)
+            for i in range(start_elem, start_elem + num_elem):
+                elements[i - start_elem, 0:num_node_elem] = (lines[i].split(','))[1:num_node_elem + 1]
         
-        #     del start_elem, start_node
+            del start_elem, start_node
         
-        nodes = np.array([[0,0],[1,0],[1,1],[0,1]])
-        num_node = len(nodes)
-        elements = np.array([[1,2,3,4]])
-        num_elem = len(elements)
+        # nodes = np.array([[0,0],[1,0],[1,1],[0,1]])
+        # num_node = len(nodes)
+        # elements = np.array([[1,2,3,4]])
+        # num_elem = len(elements)
 
         
         # total number of degrees of freedom ----> 2 displacement and 1 phase field
@@ -95,8 +102,7 @@ class input_parameters():
         # number of independent stress components
         num_stress = 3
         
-        problem = 'Elastic'
-        return num_dim, num_node_elem, nodes,num_node,elements,num_elem, num_dof, num_Gauss, num_stress, problem
+        return num_dim, num_node_elem, nodes,num_node,elements,num_elem, num_dof, num_Gauss, num_stress
     
     def material_parameters_elastic(self):
         """
@@ -173,22 +179,22 @@ class input_parameters():
         k_const = 1e-7
         
         # critical energy release for unstable crack or damage
-        G_c = 2.7  # MPa mm
+        G_c = 20.9  # MPa mm
         
         # length parameter which controls the spread of damage
-        l_0 = 0.04  # mm
+        l_0 = 0.05  # mm
         
         # Shear modulus
-        shear = 27280  # Mpa
+        shear = 70300  # Mpa
         
         # Bulk modulus
-        bulk = 71600  # Mpa
+        bulk = 136500  # Mpa
         
         # Yield stress
-        sigma_y = 345  # Mpa
+        sigma_y = 443  # Mpa
         
         # Hardening modulus 
-        hardening = 250  # Mpa
+        hardening = 300  # Mpa
         
         # if stressState == 1 plane stress; if stressState = 2 plane strain
         stressState = 2
@@ -215,7 +221,7 @@ class input_parameters():
         # Inputs for time integration parameters
         
         # number of time steps
-        num_step = 10
+        num_step = 2
         
         # maximum number of Newton-Raphson iterations
         max_iter = 10

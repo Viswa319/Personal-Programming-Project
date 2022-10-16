@@ -42,8 +42,8 @@ class tensor():
     
     def fourth_to_three(self,C:np.array):
         """
-        Function to reshape fourth order tensor from 3 x 3 x 3 x 3 to 6 x 6.
-        Then 6 x 6 order tensor is reduced to 3 x 3 order tensor based on plane strain conditions.
+        Function to reshape fourth order tensor from (3 x 3 x 3 x 3) to (6 x 6).
+        Then (6 x 6) order tensor is reduced to (3 x 3) order tensor based on plane strain conditions.
 
         Parameters
         ----------
